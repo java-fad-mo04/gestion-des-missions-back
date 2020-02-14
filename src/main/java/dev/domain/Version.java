@@ -1,21 +1,39 @@
 package dev.domain;
 
-import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+
+/**
+ * A class that represents Version
+ * 
+ * @author janka
+ *
+ */
 @Entity
 public class Version {
 
+	 /** id number  */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    /** date and time created  */
     private ZonedDateTime dateTimeCreated;
+    /** git version  */
     private String gitVersion;
-
+    /** constructor  */
     public Version() {
     }
 
+    /**
+     * constructor
+     * @param gitVersion
+     */
     public Version(String gitVersion) {
         this.gitVersion = gitVersion;
     }
@@ -25,31 +43,49 @@ public class Version {
         this.dateTimeCreated = ZonedDateTime.now();
     }
 
-    public Integer getId() {
-        return id;
-    }
+    /**
+	 * @return the id id
+	 */
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public ZonedDateTime getDateTimeCreated() {
-        return dateTimeCreated;
-    }
+	/**
+	 * @return the dateTimeCreated
+	 */
+	public ZonedDateTime getDateTimeCreated() {
+		return dateTimeCreated;
+	}
 
-    public void setDateTimeCreated(ZonedDateTime dateTimeCreated) {
-        this.dateTimeCreated = dateTimeCreated;
-    }
+	/**
+	 * @param dateTimeCreated the dateTimeCreated to set
+	 */
+	public void setDateTimeCreated(ZonedDateTime dateTimeCreated) {
+		this.dateTimeCreated = dateTimeCreated;
+	}
 
-    public String getGitVersion() {
-        return gitVersion;
-    }
+	/**
+	 * @return the gitVersion
+	 */
+	public String getGitVersion() {
+		return gitVersion;
+	}
 
-    public void setGitVersion(String gitVersion) {
-        this.gitVersion = gitVersion;
-    }
+	/**
+	 * @param gitVersion the gitVersion to set
+	 */
+	public void setGitVersion(String gitVersion) {
+		this.gitVersion = gitVersion;
+	}
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
