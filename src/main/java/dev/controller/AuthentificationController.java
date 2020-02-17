@@ -29,4 +29,7 @@ public class AuthentificationController {
                 .map(col -> ResponseEntity.ok(col))
                 .orElse(ResponseEntity.badRequest().build());
     }
+    
+    
+    
 }

@@ -13,4 +13,6 @@ import dev.domain.Nature;
 public interface NatureRepo extends JpaRepository<Nature, Long> {
 
 
+	boolean existsByLibelle(String libelle);
+	
 }
