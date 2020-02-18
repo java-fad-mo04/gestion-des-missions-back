@@ -1,5 +1,6 @@
 package dev;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -9,10 +10,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import dev.domain.Collegue;
+import dev.domain.Nature;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
+import dev.domain.Transport;
 import dev.domain.Version;
 import dev.repository.CollegueRepo;
+import dev.repository.LigneDeFraisRepo;
+import dev.repository.MissionRepo;
+import dev.repository.NatureRepo;
+import dev.repository.TransportRepo;
 import dev.repository.VersionRepo;
 
 /**
@@ -26,12 +33,22 @@ public class StartupListener {
     private VersionRepo versionRepo;
     private PasswordEncoder passwordEncoder;
     private CollegueRepo collegueRepo;
+	private TransportRepo transportRepo;
+	private NatureRepo natureRepo;
+	private LigneDeFraisRepo ligneDeFraisRepo;
+	private MissionRepo missionRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo) {
+	public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
+			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, TransportRepo transportRepo,
+			NatureRepo natureRepo, LigneDeFraisRepo ligneDeFraisRepo, MissionRepo missionRepo) {
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
         this.collegueRepo = collegueRepo;
+		this.transportRepo = transportRepo;
+		this.natureRepo = natureRepo;
+		this.ligneDeFraisRepo = ligneDeFraisRepo;
+		this.missionRepo = missionRepo;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -55,7 +72,46 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
-        
+
+		Transport tr1 = new Transport();
+		tr1.setLibelle("Avion");
+		this.transportRepo.save(tr1);
+
+		Transport tr2 = new Transport();
+		tr2.setLibelle("Covoiturage");
+		this.transportRepo.save(tr2);
+
+		Transport tr3 = new Transport();
+		tr3.setLibelle("Train");
+		this.transportRepo.save(tr3);
+		Transport tr4 = new Transport();
+		tr4.setLibelle("Voiture de service");
+		this.transportRepo.save(tr4);
+
+		Nature n1 = new Nature();
+		n1.setLibelle("Conseil".toUpperCase());
+		n1.setEstFacture(true);
+		n1.setEstPrime(true);
+		n1.setTjm(800);
+		n1.setValeurPrime(new BigDecimal(5));
+
+		this.natureRepo.save(n1);
+
+		Nature n2 = new Nature();
+
+		n2.setLibelle("Formation".toUpperCase());
+		n2.setEstFacture(true);
+		n2.setEstPrime(false);
+		n2.setTjm(1000);
+		this.natureRepo.save(n2);
+
+		Nature n3 = new Nature();
+
+		n3.setLibelle("Expertise".toUpperCase());
+		n3.setEstFacture(false);
+		n3.setEstPrime(false);
+		this.natureRepo.save(n3);
+		
     }
 
 }

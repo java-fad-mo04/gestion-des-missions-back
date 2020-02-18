@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * A class that represents a mission
  * 
@@ -50,6 +52,7 @@ public class Mission {
 
 	/** a colleague on the mission */
 	@OneToOne
+	@JsonManagedReference
 	private Collegue collegue;
 
 	/** expenses */

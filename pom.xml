@@ -116,7 +116,7 @@
                 <jdbc.url>jdbc:mysql://localhost:3306/sirhdb</jdbc.url>
                 <jdbc.user>root</jdbc.user>
                 <jdbc.pass></jdbc.pass>
-                <jpa.hibernate.ddl>update</jpa.hibernate.ddl>
+                <jpa.hibernate.ddl>create-drop</jpa.hibernate.ddl>
                 <jdbc.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</jdbc.dialect>
                 <jdbc.connections.max.active>5</jdbc.connections.max.active>
             </properties>
