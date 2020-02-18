@@ -41,9 +41,11 @@ public class StartupListener {
 	public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
 			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, TransportRepo transportRepo,
 			NatureRepo natureRepo, LigneDeFraisRepo ligneDeFraisRepo, MissionRepo missionRepo) {
+
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
+
         this.collegueRepo = collegueRepo;
 		this.transportRepo = transportRepo;
 		this.natureRepo = natureRepo;
@@ -89,29 +91,31 @@ public class StartupListener {
 		this.transportRepo.save(tr4);
 
 		Nature n1 = new Nature();
+			
 		n1.setLibelle("Conseil".toUpperCase());
 		n1.setEstFacture(true);
 		n1.setEstPrime(true);
 		n1.setTjm(800);
 		n1.setValeurPrime(new BigDecimal(5));
-
+		
 		this.natureRepo.save(n1);
+		
 
 		Nature n2 = new Nature();
-
+		
 		n2.setLibelle("Formation".toUpperCase());
 		n2.setEstFacture(true);
 		n2.setEstPrime(false);
-		n2.setTjm(1000);
+		n2.setTjm(1000);		
 		this.natureRepo.save(n2);
-
+		
+		
 		Nature n3 = new Nature();
-
+		
 		n3.setLibelle("Expertise".toUpperCase());
 		n3.setEstFacture(false);
-		n3.setEstPrime(false);
+		n3.setEstPrime(false);		
 		this.natureRepo.save(n3);
-		
     }
 
 }
