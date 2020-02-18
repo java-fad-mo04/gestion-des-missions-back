@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 /**
@@ -87,6 +88,14 @@ public class StartupListener {
 		n3.setEstFacture(false);
 		n3.setEstPrime(false);		
 		this.natureRepo.save(n3);
+		
+		
+		
+		n1.setDateFin(LocalDate.now());
+		this.natureRepo.save(n1);	
+		n1.setTjm(2000);	
+		this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
+		
     }
 
 }

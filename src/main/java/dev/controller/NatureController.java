@@ -37,13 +37,13 @@ public class NatureController {
 		this.natureServ = natureServ;
 	}
 	
-	/**Recuperation de la liste des natures
+	/**Recuperation de la liste des natures les plus recentes
 	 * 
 	 * */
 	
 	@GetMapping()
-	public List<Nature>listeNature(){
-		return natureServ.listeNature();
+	public List<Nature>listeLastNature(){
+		return natureServ.listeLastNature();
 	}
 	
 	/**Ajout d'une nature via la methode POST
@@ -56,6 +56,10 @@ public class NatureController {
 		return natureServ.ajoutNature(nature);
 
 	}
+	
+	/**Modification d'une nature via la méthode PATCH
+	 * 
+	 * */
 	
 	
 	@PatchMapping(path="/{libelleNature}")

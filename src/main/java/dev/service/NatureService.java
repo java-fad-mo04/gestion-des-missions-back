@@ -31,8 +31,8 @@ public class NatureService {
 	 * 
 	 * */
 
-	public List<Nature> listeNature() {
-		return this.natureRepository.findAll();
+	public List<Nature> listeLastNature() {
+		return this.natureRepository.listeLastNature();
 	}
 	
 	/**Ajout d'une nature 
