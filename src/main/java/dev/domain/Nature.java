@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * A class that represents nature of the mission
@@ -21,18 +24,22 @@ public class Nature {
 	private Long id;
 
 	/** label */
+	@NotNull
 	private String libelle;
 
 	/** if the mission is payed	 */
+	@NotNull
 	private boolean estFacture;
 
 	/** if there is a bonus	 */
+	@NotNull
 	private boolean estPrime;
 
 	/** average daily rate */
 	private double tjm;
 
 	/** bonus sum */
+	@Max(10)
 	private BigDecimal valeurPrime;
 
 	/** end date */
@@ -51,16 +58,16 @@ public class Nature {
 	 * @param valeurPrime bonus sum
 	 * @param dateFin end date
 	 */
-	public Nature(String libelle, boolean estFacture, boolean estPrime, double tjm, BigDecimal valeurPrime,
-			LocalDate dateFin) {
+	public Nature(String libelle, boolean estFacture, boolean estPrime, double tjm, BigDecimal valeurPrime) {
 		super();
 		this.libelle = libelle;
 		this.estFacture = estFacture;
 		this.estPrime = estPrime;
 		this.tjm = tjm;
 		this.valeurPrime = valeurPrime;
-		this.dateFin = dateFin;
 	}
+	
+	
 
 	/**
 	 * @return the id identification
