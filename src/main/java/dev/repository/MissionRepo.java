@@ -17,8 +17,7 @@ import dev.domain.Mission;
 public interface MissionRepo extends JpaRepository<Mission, Long> {
 
 	Optional<Mission> findById(Long id);
-	Optional<Mission> getDateDebut(LocalDate dateDebut);
-	Optional<Mission> getDateFin(LocalDate dateFin);
+	
 	
 
 }

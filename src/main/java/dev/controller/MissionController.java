@@ -27,8 +27,7 @@ public class MissionController {
 
 	@PatchMapping
 	public ResponseEntity<?> patchReservation(@RequestBody @Valid Mission rectif) throws Exception {
-		return ResponseEntity.status(HttpStatus.CREATED).body(this.missionService.modifierMission(rectif.getId(), rectif.getDateDebut(),
-				rectif.getDateFin(), rectif.getVilleDepart(), rectif.getVilleArrivee(), rectif.getNature(), rectif.getTransport(), rectif.getCollegue(), rectif.getFicheDeFrais()));
+		return this.missionService.modifierMission(rectif);
 
 	}
 

@@ -12,4 +12,5 @@ import dev.domain.Transport;
  */
 public interface TransportRepo extends JpaRepository<Transport, Long> {
 
+	Transport findByLibelle(String libelle);
 }
