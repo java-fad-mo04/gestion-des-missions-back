@@ -19,3 +19,4 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 	Optional<Nature> findByLibelle(String libelle);
 	
 }
+
