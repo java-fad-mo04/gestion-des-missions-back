@@ -1,22 +1,26 @@
 package dev;
 
-import dev.domain.Collegue;
-import dev.domain.Nature;
-import dev.domain.Role;
-import dev.domain.RoleCollegue;
-import dev.domain.Version;
-import dev.repository.CollegueRepo;
-import dev.repository.NatureRepo;
-import dev.repository.VersionRepo;
+import java.math.BigDecimal;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Arrays;
+import dev.domain.Collegue;
+import dev.domain.Nature;
+import dev.domain.Role;
+import dev.domain.RoleCollegue;
+import dev.domain.Transport;
+import dev.domain.Version;
+import dev.repository.CollegueRepo;
+import dev.repository.LigneDeFraisRepo;
+import dev.repository.MissionRepo;
+import dev.repository.NatureRepo;
+import dev.repository.TransportRepo;
+import dev.repository.VersionRepo;
 
 /**
  * Code de démarrage de l'application.
@@ -29,14 +33,24 @@ public class StartupListener {
     private VersionRepo versionRepo;
     private PasswordEncoder passwordEncoder;
     private CollegueRepo collegueRepo;
-    private NatureRepo natureRepo;
+	private TransportRepo transportRepo;
+	private NatureRepo natureRepo;
+	private LigneDeFraisRepo ligneDeFraisRepo;
+	private MissionRepo missionRepo;
 
-    public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo, PasswordEncoder passwordEncoder, CollegueRepo collegueRepo,NatureRepo natureRepo) {
+	public StartupListener(@Value("${app.version}") String appVersion, VersionRepo versionRepo,
+			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, TransportRepo transportRepo,
+			NatureRepo natureRepo, LigneDeFraisRepo ligneDeFraisRepo, MissionRepo missionRepo) {
+
         this.appVersion = appVersion;
         this.versionRepo = versionRepo;
         this.passwordEncoder = passwordEncoder;
+
         this.collegueRepo = collegueRepo;
-        this.natureRepo = natureRepo ;
+		this.transportRepo = transportRepo;
+		this.natureRepo = natureRepo;
+		this.ligneDeFraisRepo = ligneDeFraisRepo;
+		this.missionRepo = missionRepo;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -60,12 +74,24 @@ public class StartupListener {
         col2.setMotDePasse(passwordEncoder.encode("superpass"));
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
-        
-        /**Creation de 3 Natures + Modification d'une nature
-         * 
-         * */
-        Nature n1 = new Nature();
-		
+
+		Transport tr1 = new Transport();
+		tr1.setLibelle("Avion");
+		this.transportRepo.save(tr1);
+
+		Transport tr2 = new Transport();
+		tr2.setLibelle("Covoiturage");
+		this.transportRepo.save(tr2);
+
+		Transport tr3 = new Transport();
+		tr3.setLibelle("Train");
+		this.transportRepo.save(tr3);
+		Transport tr4 = new Transport();
+		tr4.setLibelle("Voiture de service");
+		this.transportRepo.save(tr4);
+
+		Nature n1 = new Nature();
+			
 		n1.setLibelle("Conseil".toUpperCase());
 		n1.setEstFacture(true);
 		n1.setEstPrime(true);
@@ -90,13 +116,13 @@ public class StartupListener {
 		n3.setEstFacture(false);
 		n3.setEstPrime(false);		
 		this.natureRepo.save(n3);
-		
-		
-		n1.setDateFin(LocalDate.now().minusDays(1));
-		this.natureRepo.save(n1);	
-		n1.setTjm(2000);	
-		this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
-		
+
+  n1.setDateFin(LocalDate.now().minusDays(1));
+                this.natureRepo.save(n1);     
+                n1.setTjm(2000);        
+                this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
+
     }
 
 }
+

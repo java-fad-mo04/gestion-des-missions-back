@@ -25,3 +25,4 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 	List<Nature> listeLastNature() ;
 	
 }
+
