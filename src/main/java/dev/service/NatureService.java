@@ -31,8 +31,8 @@ public class NatureService {
 	 * 
 	 * */
 
-	public List<Nature> listeNature() {
-		return this.natureRepository.findAll();
+	public List<Nature> listeLastNature() {
+		return this.natureRepository.listeLastNature();
 	}
 	
 	/**Ajout d'une nature 
@@ -57,7 +57,7 @@ public class NatureService {
 		return ResponseEntity.status(HttpStatus.CREATED).body("Nature enregistré");
 
 	}
-	/**Modification d'une nature 
+	/** Modification d'une nature , Sauvegarde l'ancienne avec une date j-1 a la modification
 	 * Param String libelle, Nature nature
 	 * 
 	 * return ResponseEntity<String>
@@ -74,7 +74,8 @@ public class NatureService {
 		
 		Nature modifNature = recupNature.get();
 		
-		modifNature.setDateFin(LocalDate.now());
+		
+		modifNature.setDateFin(LocalDate.now().minusDays(1));
 		
 		this.natureRepository.save(modifNature);
 		
