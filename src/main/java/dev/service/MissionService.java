@@ -122,6 +122,7 @@ public class MissionService {
 
 		for (Mission m : missions) {
 			MissionDTO md = new MissionDTO();
+			md.setId(m.getId());
 			md.setDateDebut(m.getDateDebut());
 			md.setDateFin(m.getDateFin());
 			md.setCollegueId(m.getCollegue().getId());
