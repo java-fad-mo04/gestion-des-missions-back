@@ -1,6 +1,7 @@
 package dev;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import dev.domain.Collegue;
+import dev.domain.Mission;
 import dev.domain.Nature;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
+import dev.domain.Status;
 import dev.domain.Transport;
 import dev.domain.Version;
 import dev.repository.CollegueRepo;
@@ -86,6 +89,7 @@ public class StartupListener {
 		Transport tr3 = new Transport();
 		tr3.setLibelle("Train");
 		this.transportRepo.save(tr3);
+
 		Transport tr4 = new Transport();
 		tr4.setLibelle("Voiture de service");
 		this.transportRepo.save(tr4);
@@ -116,6 +120,28 @@ public class StartupListener {
 		n3.setEstFacture(false);
 		n3.setEstPrime(false);		
 		this.natureRepo.save(n3);
+
+		Mission miss1 = new Mission();
+		miss1.setCollegue(col1);
+		miss1.setDateDebut(LocalDate.of(2020, 3, 2));
+		miss1.setDateFin(LocalDate.of(2020, 3, 2));
+		miss1.setNature(n1);
+		miss1.setStatus(Status.INITIALE);
+		miss1.setTransport(tr2);
+		miss1.setVilleArrivee("Paris");
+		miss1.setVilleDepart("Lille");
+		this.missionRepo.save(miss1);
+
+		Mission miss2 = new Mission();
+		miss2.setCollegue(col2);
+		miss2.setDateDebut(LocalDate.of(2020, 3, 8));
+		miss2.setDateFin(LocalDate.of(2020, 3, 12));
+		miss2.setNature(n2);
+		miss2.setStatus(Status.INITIALE);
+		miss2.setTransport(tr3);
+		miss2.setVilleArrivee("Paris");
+		miss2.setVilleDepart("Lille");
+		this.missionRepo.save(miss2);
     }
 
 }
