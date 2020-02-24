@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityExistsException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,15 @@ public class NatureService {
 		return this.natureRepository.listeLastNature();
 	}
 	
+	/** Get nature by id
+	 * @param id identification number
+	 * @return object Nature corresponding to the id
+	 */
+	public Nature getById(Long id) {
+		return this.natureRepository.findById(id)
+				.orElseThrow(() -> new EntityExistsException("Nature avec cet id n'existe pas."));
+	}
+
 	/**Ajout d'une nature 
 	 * 
 	 * Param : Nature
