@@ -20,7 +20,6 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 
 	Optional<Nature> findByLibelle(String libelle);
 	
-	
 	@Query("SELECT n FROM Nature n WHERE n.dateFin = null")
 	List<Nature> listeLastNature() ;
 	

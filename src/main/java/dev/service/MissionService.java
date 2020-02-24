@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import javax.persistence.EntityExistsException;
 
@@ -24,7 +23,6 @@ import dev.utils.DateChecker;
 
 @Service
 public class MissionService {
-	private static final Supplier EntityExistsException = null;
 	private MissionRepo missionRepo;
 	private TransportRepo transportRepo;
 	private CollegueRepo collegueRepo;
@@ -122,6 +120,7 @@ public class MissionService {
 
 		for (Mission m : missions) {
 			MissionDTO md = new MissionDTO();
+			md.setId(m.getId());
 			md.setDateDebut(m.getDateDebut());
 			md.setDateFin(m.getDateFin());
 			md.setCollegueId(m.getCollegue().getId());
@@ -182,8 +181,7 @@ public class MissionService {
 		}
 
 		// Vérifier que la mission ne débute pas le jour de sa déclaration.
-		else if (mission.getDateDebut().compareTo(LocalDate.now()) <= 0
-				|| mission.getDateFin().compareTo(LocalDate.now()) <= 0) {
+		else if (mission.getDateDebut().compareTo(LocalDate.now()) <= 0) {
 			throw new Exception("La date de début et la date de fin doivent être postérieures à la date actuelle");
 		} else {
 			// Modifier la date.
