@@ -26,6 +26,13 @@ public class CollegueVM {
     }
 
 	/**
+	 * Constructor
+	 */
+	public CollegueVM() {
+
+	}
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {
