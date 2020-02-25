@@ -1,10 +1,16 @@
 package dev.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.controller.vm.CollegueVM;
-import dev.domain.Collegue;
-import dev.repository.CollegueRepo;
-import io.jsonwebtoken.Jwts;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +21,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dev.controller.vm.CollegueVM;
+import dev.domain.Collegue;
+import dev.repository.CollegueRepo;
+import io.jsonwebtoken.Jwts;
 
 /**
  * Gestion de la réponse HTTP en cas d'authentification à succès.
@@ -72,7 +75,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         String jws = Jwts.builder()
                 .setSubject(user.getUsername())
                 .addClaims(infosSupplementaireToken)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRES_IN * 1000))
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRES_IN * 1000))
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512, SECRET)
                 .compact();
 

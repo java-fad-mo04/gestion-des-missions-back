@@ -15,6 +15,13 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * A class with methods checking if the date is a public Holiday in France, or
+ * if it is today
+ * 
+ * @author janka
+ *
+ */
 public class DateChecker {
 	private static final Logger LOG = LoggerFactory.getLogger(DateChecker.class);
 

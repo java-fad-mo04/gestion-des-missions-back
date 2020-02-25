@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.controller.vm.MissionVM;
 import dev.domain.MissionDTO;
 import dev.service.MissionService;
 
@@ -33,12 +34,12 @@ public class MissionController {
 	}
 
 	@GetMapping
-	public List<MissionDTO> listMission() {
+	public List<MissionVM> listMission() {
 		return this.missionService.listMission();
 	}
 
 	@PostMapping()
-	public ResponseEntity<String> createMission(@RequestBody @Valid MissionDTO missionIn) {
+	public ResponseEntity<String> createMission(@RequestBody @Valid MissionVM missionIn) {
 		return this.missionService.createMission(missionIn);
 	}
 
