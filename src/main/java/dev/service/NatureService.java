@@ -95,7 +95,7 @@ public class NatureService {
 			nature.setTjm(0);
 		}
 		if(nature.isEstPrime()==false){
-			nature.setValeurPrime(new BigDecimal(0));
+			nature.setValeurPrime(new BigDecimal(0)); 
 		}
 			
 	
