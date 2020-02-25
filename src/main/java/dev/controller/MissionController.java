@@ -50,7 +50,7 @@ public class MissionController {
 	}
 
 	@PatchMapping
-	public ResponseEntity<String> patchReservation(@RequestBody MissionVM rectif) throws Exception {
+	public ResponseEntity<String> patchMission(@RequestBody MissionVM rectif) throws Exception {
 		return this.missionService.modifierMission(rectif);
 
 	}

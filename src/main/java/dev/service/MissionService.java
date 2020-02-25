@@ -210,7 +210,7 @@ public class MissionService {
 		}
 
 		// Modifier le collègue.
-		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegue().getId()).orElseThrow(()->new EntityExistsException("Collegue n'existe pas")));
+		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegue().getId()).orElseThrow(()->new EntityExistsException("Ce collègue n'existe pas")));
 
 		// Modifier les villes
 		missModif.setVilleDepart(mission.getVilleDepart());
