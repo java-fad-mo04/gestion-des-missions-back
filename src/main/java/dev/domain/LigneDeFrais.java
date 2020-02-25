@@ -26,10 +26,10 @@ public class LigneDeFrais {
 	private LocalDate date;
 
 	/** label */
-	private String libelle;
+	private NatureFrais nature;
 
 	/** total sum	 */
-	private BigDecimal montant;
+	private long montant;
 
 	/** mission	 */
 	@OneToOne
@@ -48,11 +48,10 @@ public class LigneDeFrais {
 	 * @param montant total sum
 	 * @param mission mission
 	 */
-	public LigneDeFrais(Long id, LocalDate date, String libelle, BigDecimal montant, Mission mission) {
+	public LigneDeFrais(LocalDate date, NatureFrais nature, long montant, Mission mission) {
 		super();
-		this.id=id;
 		this.date = date;
-		this.libelle = libelle;
+		this.nature = nature;
 		this.montant = montant;
 		this.mission = mission;
 	}
@@ -86,30 +85,30 @@ public class LigneDeFrais {
 	}
 
 	/**
-	 * @return the libelle label
+	 * @return the nature 
 	 */
-	public String getLibelle() {
-		return libelle;
+	public NatureFrais getNature() {
+		return nature;
 	}
 
 	/**
 	 * @param libelle the label to set
 	 */
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
+	public void setNature(NatureFrais nature) {
+		this.nature = nature;
 	}
 
 	/**
 	 * @return the montant total sum
 	 */
-	public BigDecimal getMontant() {
+	public long getMontant() {
 		return montant;
 	}
 
 	/**
 	 * @param montant the total sum to set
 	 */
-	public void setMontant(BigDecimal montant) {
+	public void setMontant(long montant) {
 		this.montant = montant;
 	}
 
