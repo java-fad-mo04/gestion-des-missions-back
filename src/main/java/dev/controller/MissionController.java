@@ -40,7 +40,7 @@ public class MissionController {
 	}
 	
 	@GetMapping (path="/{idMission}")
-	public MissionDTO recupMission(@PathVariable("idMission") @Valid Long idMission) throws Exception {
+	public MissionVM recupMission(@PathVariable("idMission") Long idMission) throws Exception {
 		return this.missionService.recupMission(idMission);
 	};
 
@@ -50,7 +50,7 @@ public class MissionController {
 	}
 
 	@PatchMapping
-	public ResponseEntity<String> patchReservation(@RequestBody @Valid MissionDTO rectif) throws Exception {
+	public ResponseEntity<String> patchReservation(@RequestBody MissionVM rectif) throws Exception {
 		return this.missionService.modifierMission(rectif);
 
 	}

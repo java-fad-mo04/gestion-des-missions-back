@@ -1,3 +1,4 @@
+
 package dev.service;
 
 import java.time.LocalDate;
@@ -11,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import dev.controller.vm.CollegueVM;
 import dev.controller.vm.MissionVM;
 import dev.domain.Mission;
 import dev.domain.MissionDTO;
+import dev.domain.RoleCollegue;
 import dev.domain.Status;
 import dev.repository.CollegueRepo;
 import dev.repository.LigneDeFraisRepo;
@@ -60,28 +63,28 @@ public class MissionService {
 						missionIn.getDateFin())
 				.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Une mission pour ce collegue existe déjà à ces dates.");
+					.body("Une mission existe déjà pour ce collègue à ces dates");
 		}
 
 		if (missionIn.getDateDebut().isAfter(missionIn.getDateFin())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("La date de début de mission doit être antérieure à la date du fin.");
+					.body("La date de début de mission doit être antérieure à la date de fin");
 		}
 
 		if (DateChecker.isToday(missionIn.getDateDebut())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Une mission ne peut pas commencer ou finir aujourd'hui.");
+					.body("Une mission ne peut pas commencer ou finir à la date d'aujourd'hui");
 		}
 		
 		if (DateChecker.isHoliday(missionIn.getDateDebut(), missionIn.getDateFin())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Une mission ne peut pas commencer ou finir les jours fériés.");
+					.body("Une mission ne peut pas commencer ou finir un jour férié");
 		}
 
 		if (this.transportRepo.findById(missionIn.getTransport().getId()).get().getLibelle().contains("Avion")
 				&& !missionIn.getDateDebut().minusDays(7).isAfter(LocalDate.now())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Une mission par avion ne peut commencer que 7 jours minimum à compter d'aujourd'hui.");
+					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
 		}
 
 		//collegue has at least one mission in the db - check if the new overlaps with existing and a holiday
@@ -92,61 +95,63 @@ public class MissionService {
 				if (!missionIn.getDateDebut().isAfter(m.getDateFin())
 						&& !missionIn.getDateFin().isBefore(m.getDateDebut())) {
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-							.body("Deux missions ne peuvent se chevaucher.");
+							.body("Deux missions ne peuvent avoir lieu en simultané");
 				}
 			}
 		}
 		Mission mission = new Mission();
 		mission.setDateDebut(missionIn.getDateDebut());
 		mission.setDateFin(missionIn.getDateFin());
-		
 		mission.setTransport(this.transportRepo.findById(missionIn.getTransport().getId())
-				.orElseThrow(() -> new EntityExistsException("Transport avec cet id n'existe pas.")));
+				.orElseThrow(() -> new EntityExistsException("Aucun transport n'existe pour cet id")));
 		mission.setNature(this.natureRepo.findById(missionIn.getNature().getId())
- 
-				.orElseThrow(() -> new EntityExistsException("Nature avec cet id n'existe pas.")));
+				.orElseThrow(() -> new EntityExistsException("Aucune nature n'existe pour cet id")));
 		mission.setCollegue(this.collegueRepo.findById(missionIn.getCollegue().getId())
-				.orElseThrow(() -> new EntityExistsException("Collegue avec cet id n'existe pas.")));
+				.orElseThrow(() -> new EntityExistsException("Aucun collègue n'existe pour cet id")));
 		mission.setStatus(Status.INITIALE);
 		mission.setVilleDepart(missionIn.getVilleDepart());
 		mission.setVilleArrivee(missionIn.getVilleArrivee());
 		this.missionRepo.save(mission);
-		return ResponseEntity.status(HttpStatus.CREATED).body("La mission a bien été enregistrée.");
+		return ResponseEntity.status(HttpStatus.CREATED).body("La mission a bien été enregistrée");
 		}
 
 
-	
-
-	
-
-	public MissionDTO recupMission(Long id) throws Exception {
-		MissionDTO md = new MissionDTO();
-		Mission m = missionRepo.findById(id).orElseThrow(() -> new Exception("La mission n'existe pas"));
-		md.setId(m.getId());
-		md.setDateDebut(m.getDateDebut());
-		md.setDateFin(m.getDateFin());
-		md.setCollegueId(m.getCollegue().getId());
-		md.setNatureId(m.getNature().getId());
-		md.setStatus(m.getStatus());
-		md.setTransportId(m.getTransport().getId());
-		md.setVilleArrivee(m.getVilleArrivee());
-		md.setVilleDepart(m.getVilleDepart());
-		return md;
-	}
-	
-/**
+	/**
 	 * @return list of missions from database
 	 */
 	public List<MissionVM> listMission() {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
+	public MissionVM recupMission(Long id) throws Exception {
+		MissionVM md = new MissionVM();
+		Mission m = missionRepo.findById(id).orElseThrow(() -> new Exception("La mission n'existe pas"));
+		CollegueVM coll = new CollegueVM();
+		coll.setId(m.getCollegue().getId());
+		coll.setEmail(m.getCollegue().getEmail());
+		coll.setNom(m.getCollegue().getNom());
+		coll.setPrenom(m.getCollegue().getPrenom());
+		for (RoleCollegue role : m.getCollegue().getRoles()) {
+			coll.getRoles().add(role.getRole());
+		}
+		
+		md.setId(m.getId());
+		md.setDateDebut(m.getDateDebut());
+		md.setDateFin(m.getDateFin());
+		md.setCollegue(coll);
+		md.setNature(m.getNature());
+		md.setStatus(m.getStatus());
+		md.setTransport(m.getTransport());
+		md.setVilleArrivee(m.getVilleArrivee());
+		md.setVilleDepart(m.getVilleDepart());
+		return md;
+	}
 	/**
 	 * @param mission
 	 * @return
 	 * @throws Exception
 	 */
-	public ResponseEntity<String> modifierMission(MissionDTO mission) throws Exception {
+	public ResponseEntity<String> modifierMission(MissionVM mission) throws Exception {
 
 		// Récupérer la mission à modifier dans la liste.
 		Optional<Mission> missionDb = missionRepo.findById(mission.getId());
@@ -169,7 +174,7 @@ public class MissionService {
 			// date de début d'une autre mission.
 			// La date de début de la mission à modifier doit être postérieure à
 			// la date de fin d'une autre mission .
-			if (!m.equals(missionDb) && (f.isBefore(debut) || d.isAfter(fin))) {
+			if (!m.equals(missionDb) && (f.isBefore(debut) && d.isAfter(fin))) {
 				throw new Exception("Deux missions ne peuvent avoir lieu en simultané");
 			}
 
@@ -180,13 +185,16 @@ public class MissionService {
 			throw new Exception("La date de début doit être antérieure à la date de fin");
 		}
 
+		if (mission.getDateDebut().equals(mission.getDateFin())) {
+			throw new Exception("La date de début doit être différente de la date de fin");
+		}
 		if (DateChecker.isHoliday(mission.getDateDebut(), mission.getDateFin())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body("Une mission ne peut pas commencer ou finir les jours fériés.");
+					.body("Une mission ne peut pas commencer ou finir un jour férié");
 		}
 
 		// Vérifier la marge de 7 jours pour la réservation d'un avion
-		if (this.transportRepo.findById(mission.getTransportId()).get().getLibelle().contains("Avion")
+		if (this.transportRepo.findById(mission.getTransport().getId()).get().getLibelle().contains("Avion")
 				&& !mission.getDateDebut().minusDays(7).isAfter(LocalDate.now())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
@@ -202,19 +210,19 @@ public class MissionService {
 		}
 
 		// Modifier le collègue.
-		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegueId()).orElseThrow(()->new EntityExistsException("Collegue n'existe pas")));
+		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegue().getId()).orElseThrow(()->new EntityExistsException("Collegue n'existe pas")));
 
 		// Modifier les villes
 		missModif.setVilleDepart(mission.getVilleDepart());
 		missModif.setVilleArrivee(mission.getVilleArrivee());
 
 		// Modifier la nature de la mission.
-		missModif.setNature(this.natureRepo.findById(mission.getNatureId())
-				.orElseThrow(() -> new EntityExistsException("Nature avec cet id n'existe pas.")));
+		missModif.setNature(this.natureRepo.findById(mission.getNature().getId())
+				.orElseThrow(() -> new EntityExistsException("Aucune nature n'existe pour cet id")));
 
 		// Modifier le type de transport.
-		missModif.setTransport(this.transportRepo.findById(mission.getTransportId())
-				.orElseThrow(() -> new EntityExistsException("Transport avec cet id n'existe pas.")));
+		missModif.setTransport(this.transportRepo.findById(mission.getTransport().getId())
+				.orElseThrow(() -> new EntityExistsException("Aucun transport n'existe pour cet id")));
 
 
 		// Modifier le Statut.
