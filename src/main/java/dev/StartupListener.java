@@ -121,6 +121,7 @@ public class StartupListener {
 		n2.setEstFacture(true);
 		n2.setEstPrime(false);
 		n2.setTjm(1000);
+		n2.setValeurPrime(new BigDecimal(0));
 		this.natureRepo.save(n2);
 
 		Nature n3 = new Nature();
@@ -128,6 +129,8 @@ public class StartupListener {
 		n3.setLibelle("Expertise".toUpperCase());
 		n3.setEstFacture(false);
 		n3.setEstPrime(false);
+		n3.setTjm(0);
+		n3.setValeurPrime(new BigDecimal(0));
 		this.natureRepo.save(n3);
 
 		Mission miss1 = new Mission();
@@ -183,5 +186,4 @@ public class StartupListener {
       this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
 
     }
-
 }
