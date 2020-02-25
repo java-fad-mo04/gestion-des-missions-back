@@ -96,7 +96,7 @@ public class StartupListener {
 
       Nature n1 = new Nature();
 
-      n1.setLibelle("Conseil".toUpperCase());
+      n1.setLibelle("Conseil");
       n1.setEstFacture(true);
       n1.setEstPrime(true);
       n1.setTjm(800);
@@ -107,7 +107,7 @@ public class StartupListener {
 
       Nature n2 = new Nature();
 
-      n2.setLibelle("Formation".toUpperCase());
+      n2.setLibelle("Formation");
       n2.setEstFacture(true);
       n2.setEstPrime(false);
       n2.setTjm(1000);		
@@ -116,7 +116,7 @@ public class StartupListener {
 
       Nature n3 = new Nature();
 
-      n3.setLibelle("Expertise".toUpperCase());
+      n3.setLibelle("Expertise technique");
       n3.setEstFacture(false);
       n3.setEstPrime(false);		
       this.natureRepo.save(n3);
