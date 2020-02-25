@@ -1,10 +1,9 @@
 package dev.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityExistsException;
 
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import dev.controller.vm.MissionVM;
 import dev.domain.Mission;
 import dev.domain.MissionDTO;
 import dev.domain.Status;
@@ -24,7 +24,6 @@ import dev.utils.DateChecker;
 
 @Service
 public class MissionService {
-	private static final Supplier EntityExistsException = null;
 	private MissionRepo missionRepo;
 	private TransportRepo transportRepo;
 	private CollegueRepo collegueRepo;
@@ -54,11 +53,10 @@ public class MissionService {
 	 *            mission form input by user
 	 * @return ResponseEntity<String>
 	 */
-	public ResponseEntity<String> createMission(MissionDTO missionIn) {
-		// we do not check if collegue exists because s/he is logged in =>
-		// Exists in the db!
+	public ResponseEntity<String> createMission(MissionVM missionIn) {
+
 		if (!this.missionRepo
-				.findByCollegueIdDateDebutDateFin(missionIn.getCollegueId(), missionIn.getDateDebut(),
+				.findByCollegueIdDateDebutDateFin(missionIn.getCollegue().getId(), missionIn.getDateDebut(),
 						missionIn.getDateFin())
 				.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -80,15 +78,15 @@ public class MissionService {
 					.body("Une mission ne peut pas commencer ou finir les jours fériés.");
 		}
 
-		if (this.transportRepo.findById(missionIn.getTransportId()).get().getLibelle().contains("Avion")
+		if (this.transportRepo.findById(missionIn.getTransport().getId()).get().getLibelle().contains("Avion")
 				&& !missionIn.getDateDebut().minusDays(7).isAfter(LocalDate.now())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Une mission par avion ne peut commencer que 7 jours minimum à compter d'aujourd'hui.");
 		}
 
 		//collegue has at least one mission in the db - check if the new overlaps with existing and a holiday
-		if (!this.missionRepo.findByCollegueId(missionIn.getCollegueId()).isEmpty()) {
-			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegueId());
+		if (!this.missionRepo.findByCollegueId(missionIn.getCollegue().getId()).isEmpty()) {
+			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegue().getId());
 
 			for (Mission m : missions) {
 				if (!missionIn.getDateDebut().isAfter(m.getDateFin())
@@ -101,40 +99,25 @@ public class MissionService {
 		Mission mission = new Mission();
 		mission.setDateDebut(missionIn.getDateDebut());
 		mission.setDateFin(missionIn.getDateFin());
-		mission.setTransport(this.transportRepo.findById(missionIn.getTransportId())
-				.orElseThrow(() -> new EntityExistsException("Aucun transport n'existe pour cet id.")));
-		mission.setNature(this.natureRepo.findById(missionIn.getNatureId())
+		
+		mission.setTransport(this.transportRepo.findById(missionIn.getTransport().getId())
+				.orElseThrow(() -> new EntityExistsException("Transport avec cet id n'existe pas.")));
+		mission.setNature(this.natureRepo.findById(missionIn.getNature().getId())
+ 
 				.orElseThrow(() -> new EntityExistsException("Nature avec cet id n'existe pas.")));
-		mission.setCollegue(this.collegueRepo.findById(missionIn.getCollegueId())
+		mission.setCollegue(this.collegueRepo.findById(missionIn.getCollegue().getId())
 				.orElseThrow(() -> new EntityExistsException("Collegue avec cet id n'existe pas.")));
 		mission.setStatus(Status.INITIALE);
+		mission.setVilleDepart(missionIn.getVilleDepart());
+		mission.setVilleArrivee(missionIn.getVilleArrivee());
 		this.missionRepo.save(mission);
 		return ResponseEntity.status(HttpStatus.CREATED).body("La mission a bien été enregistrée.");
 		}
 
 
-	/**
-	 * @return list of missions from database
-	 */
-	public List<MissionDTO> listMission() {
-		List<Mission> missions = this.missionRepo.findAll();
-		List<MissionDTO> missionsDto = new ArrayList<MissionDTO>();
+	
 
-		for (Mission m : missions) {
-			MissionDTO md = new MissionDTO();
-			md.setId(m.getId());
-			md.setDateDebut(m.getDateDebut());
-			md.setDateFin(m.getDateFin());
-			md.setCollegueId(m.getCollegue().getId());
-			md.setNatureId(m.getNature().getId());
-			md.setStatus(m.getStatus());
-			md.setTransportId(m.getTransport().getId());
-			md.setVilleArrivee(m.getVilleArrivee());
-			md.setVilleDepart(m.getVilleDepart());
-			missionsDto.add(md);
-		}
-		return missionsDto;
-	}
+	
 
 	public MissionDTO recupMission(Long id) throws Exception {
 		MissionDTO md = new MissionDTO();
@@ -151,6 +134,18 @@ public class MissionService {
 		return md;
 	}
 	
+/**
+	 * @return list of missions from database
+	 */
+	public List<MissionVM> listMission() {
+		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
+	}
+
+	/**
+	 * @param mission
+	 * @return
+	 * @throws Exception
+	 */
 	public ResponseEntity<String> modifierMission(MissionDTO mission) throws Exception {
 
 		// Récupérer la mission à modifier dans la liste.
@@ -198,8 +193,7 @@ public class MissionService {
 		}
 
 		// Vérifier que la mission ne débute pas le jour de sa déclaration.
-		else if (mission.getDateDebut().compareTo(LocalDate.now()) <= 0
-				|| mission.getDateFin().compareTo(LocalDate.now()) <= 0) {
+		else if (mission.getDateDebut().compareTo(LocalDate.now()) <= 0) {
 			throw new Exception("La date de début et la date de fin doivent être postérieures à la date actuelle");
 		} else {
 			// Modifier la date.
