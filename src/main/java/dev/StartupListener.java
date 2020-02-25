@@ -11,8 +11,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import dev.domain.Collegue;
+import dev.domain.LigneDeFrais;
 import dev.domain.Mission;
 import dev.domain.Nature;
+import dev.domain.NatureFrais;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
 import dev.domain.Status;
@@ -160,6 +162,20 @@ public class StartupListener {
 		miss3.setVilleArrivee("Paris");
 		miss3.setVilleDepart("Berlin");
 		this.missionRepo.save(miss3);
+		
+		LigneDeFrais frais1 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Hotel,200,miss1);
+		this.ligneDeFraisRepo.save(frais1);
+		
+		LigneDeFrais frais2 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.PetitDejeuner,15,miss1);
+		this.ligneDeFraisRepo.save(frais2);
+		
+		LigneDeFrais frais3 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Transport,90,miss1);
+		this.ligneDeFraisRepo.save(frais3);
+		
+		LigneDeFrais frais4 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Restaurant,30,miss1);
+		this.ligneDeFraisRepo.save(frais4);
+		
+		
 
       n1.setDateFin(LocalDate.now().minusDays(1));
                   this.natureRepo.save(n1);     
