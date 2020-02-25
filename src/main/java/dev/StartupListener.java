@@ -78,6 +78,15 @@ public class StartupListener {
         col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
         this.collegueRepo.save(col2);
 
+		Collegue col3 = new Collegue();
+		col3.setNom("Manager");
+		col3.setPrenom("DEV");
+		col3.setEmail("manager@dev.fr");
+		col3.setMotDePasse(passwordEncoder.encode("superpass"));
+		col3.setRoles(Arrays.asList(new RoleCollegue(col3, Role.ROLE_UTILISATEUR),
+				new RoleCollegue(col3, Role.ROLE_MANAGER)));
+		this.collegueRepo.save(col3);
+
 		Transport tr1 = new Transport();
 		tr1.setLibelle("Avion");
 		this.transportRepo.save(tr1);
