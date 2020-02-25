@@ -1,5 +1,6 @@
 package dev.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -54,13 +55,17 @@ public class NatureService {
 
 	public ResponseEntity<String> ajoutNature(Nature nature) {
 
-		if (this.natureRepository.existsByLibelle(nature.getLibelle().toUpperCase().trim())) {
+		if (this.natureRepository.existsByLibelle(nature.getLibelle().trim().toUpperCase())) {
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature deja existante");
 
 		}
 
-			this.natureRepository.save(new Nature(nature.getLibelle().trim(), nature.isEstFacture(), nature.isEstPrime(),
+		if(nature.getValeurPrime()==null){
+			nature.setValeurPrime(new BigDecimal(0));
+		}
+		
+			this.natureRepository.save(new Nature(nature.getLibelle().trim().toUpperCase(), nature.isEstFacture(), nature.isEstPrime(),
 					nature.getTjm(), nature.getValeurPrime()));
 
 		
@@ -74,9 +79,9 @@ public class NatureService {
 	 * return ResponseEntity<String>
 	*/
 	
-	public ResponseEntity<String> modifierNature(String libelle,Nature nature){
+	public ResponseEntity<String> modifierNature(Nature nature){
 		
-		Optional<Nature> recupNature = this.natureRepository.findByLibelle(libelle.toUpperCase().trim());
+		Optional<Nature> recupNature = this.natureRepository.findById(nature.getId());
 		
 		
 		if(!recupNature.isPresent()){			
@@ -85,6 +90,20 @@ public class NatureService {
 		
 		Nature modifNature = recupNature.get();
 		
+	
+		if(nature.isEstFacture() == false){
+			nature.setTjm(0);
+		}
+		if(nature.isEstPrime()==false){
+			nature.setValeurPrime(new BigDecimal(0));
+		}
+			
+	
+		
+		if(modifNature.isEstFacture() == nature.isEstFacture() && modifNature.isEstPrime() == nature.isEstPrime() && modifNature.getTjm() == nature.getTjm() && modifNature.getValeurPrime().doubleValue() == nature.getValeurPrime().doubleValue()){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature identique non modifiée");
+		}
+	
 		
 		modifNature.setDateFin(LocalDate.now().minusDays(1));
 		

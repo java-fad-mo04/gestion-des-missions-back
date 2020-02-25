@@ -1,3 +1,4 @@
+
 package dev.controller;
 
 import java.util.List;
@@ -60,3 +61,4 @@ public class MissionController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 }
+
