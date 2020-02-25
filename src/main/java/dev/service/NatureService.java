@@ -1,5 +1,6 @@
 package dev.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -60,6 +61,10 @@ public class NatureService {
 
 		}
 
+		if(nature.getValeurPrime()==null){
+			nature.setValeurPrime(new BigDecimal(0));
+		}
+		
 			this.natureRepository.save(new Nature(nature.getLibelle().trim().toUpperCase(), nature.isEstFacture(), nature.isEstPrime(),
 					nature.getTjm(), nature.getValeurPrime()));
 
@@ -85,10 +90,20 @@ public class NatureService {
 		
 		Nature modifNature = recupNature.get();
 		
-		if(modifNature.isEstFacture()== nature.isEstFacture() && modifNature.isEstPrime() == nature.isEstPrime() && modifNature.getTjm() == nature.getTjm() && modifNature.getValeurPrime() == nature.getValeurPrime()){
+	
+		if(nature.isEstFacture() == false){
+			nature.setTjm(0);
+		}
+		if(nature.isEstPrime()==false){
+			nature.setValeurPrime(new BigDecimal(0));
+		}
+			
+	
+		
+		if(modifNature.isEstFacture() == nature.isEstFacture() && modifNature.isEstPrime() == nature.isEstPrime() && modifNature.getTjm() == nature.getTjm() && modifNature.getValeurPrime().doubleValue() == nature.getValeurPrime().doubleValue()){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature identique non modifiée");
 		}
-		
+	
 		
 		modifNature.setDateFin(LocalDate.now().minusDays(1));
 		
