@@ -6,8 +6,10 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.domain.Nature;
+import dev.exception.NatureException;
 import dev.service.NatureService;
 
-/**Controller de l'entite nature
+/**
+ * Controller de l'entite nature
  * 
  * 
- * */
+ */
 
 @CrossOrigin
 @RestController
@@ -36,39 +40,46 @@ public class NatureController {
 	public NatureController(NatureService natureServ) {
 		this.natureServ = natureServ;
 	}
-	
-	/**Recuperation de la liste des natures les plus recentes
+
+	/**
+	 * Recuperation de la liste des natures les plus recentes
 	 * 
-	 * */
-	
+	 */
+
 	@GetMapping()
-	public List<Nature>listeLastNature(){
+	public List<Nature> listeLastNature() {
 		return natureServ.listeLastNature();
 	}
-	
-	/**Ajout d'une nature via la methode POST
+
+	/**
+	 * Ajout d'une nature via la methode POST
 	 * 
 	 * Return ResponseEntity<String>
-	 * */
+	 */
 	@PostMapping()
-	public ResponseEntity<String>ajoutNature(@RequestBody @Valid Nature nature){
+	public ResponseEntity<String> ajoutNature(@RequestBody @Valid Nature nature) {
 
 		return natureServ.ajoutNature(nature);
 
 	}
-	
-	/**Modification d'une nature via la méthode PATCH
-	 * 
-	 * */
-	
-	
-	@PatchMapping(path="/{libelleNature}")
-	public ResponseEntity<String>modifierNature(@RequestBody @Valid Nature nature ,@PathVariable("libelleNature") String libelle){
 
-		return natureServ.modifierNature(libelle,nature);
+	/**
+	 * Modification d'une nature via la méthode PATCH
+	 * 
+	 */
+
+	@PatchMapping()
+	public ResponseEntity<String> modifierNature(@RequestBody @Valid Nature nature) {
+
+		return natureServ.modifierNature(nature);
 
 	}
 
-	
-	
+	@ExceptionHandler
+	public ResponseEntity<?> reponse(NatureException e) {
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+	}
+
 }

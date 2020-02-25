@@ -43,13 +43,13 @@ public class NatureService {
 
 	public ResponseEntity<String> ajoutNature(Nature nature) {
 
-		if (this.natureRepository.existsByLibelle(nature.getLibelle().toUpperCase().trim())) {
+		if (this.natureRepository.existsByLibelle(nature.getLibelle().trim().toUpperCase())) {
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature deja existante");
 
 		}
 
-			this.natureRepository.save(new Nature(nature.getLibelle().trim(), nature.isEstFacture(), nature.isEstPrime(),
+			this.natureRepository.save(new Nature(nature.getLibelle().trim().toUpperCase(), nature.isEstFacture(), nature.isEstPrime(),
 					nature.getTjm(), nature.getValeurPrime()));
 
 		
@@ -63,9 +63,9 @@ public class NatureService {
 	 * return ResponseEntity<String>
 	*/
 	
-	public ResponseEntity<String> modifierNature(String libelle,Nature nature){
+	public ResponseEntity<String> modifierNature(Nature nature){
 		
-		Optional<Nature> recupNature = this.natureRepository.findByLibelle(libelle.toUpperCase().trim());
+		Optional<Nature> recupNature = this.natureRepository.findById(nature.getId());
 		
 		
 		if(!recupNature.isPresent()){			
@@ -73,6 +73,10 @@ public class NatureService {
 		}
 		
 		Nature modifNature = recupNature.get();
+		
+		if(modifNature.isEstFacture()== nature.isEstFacture() && modifNature.isEstPrime() == nature.isEstPrime() && modifNature.getTjm() == nature.getTjm() && modifNature.getValeurPrime() == nature.getValeurPrime()){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature identique non modifiée");
+		}
 		
 		
 		modifNature.setDateFin(LocalDate.now().minusDays(1));

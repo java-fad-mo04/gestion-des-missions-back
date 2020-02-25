@@ -120,6 +120,11 @@ public class StartupListener {
       n3.setEstFacture(false);
       n3.setEstPrime(false);		
       this.natureRepo.save(n3);
+      
+      n1.setDateFin(LocalDate.now().minusDays(1));
+      this.natureRepo.save(n1);     
+      n1.setTjm(2000);        
+this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
 
       Mission miss1 = new Mission();
       miss1.setCollegue(col1);
@@ -143,10 +148,7 @@ public class StartupListener {
       miss2.setVilleDepart("Lille");
       this.missionRepo.save(miss2);
 
-      n1.setDateFin(LocalDate.now().minusDays(1));
-                  this.natureRepo.save(n1);     
-                  n1.setTjm(2000);        
-      this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
+
 
     }
 
