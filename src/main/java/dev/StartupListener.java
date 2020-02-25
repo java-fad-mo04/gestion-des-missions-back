@@ -28,16 +28,15 @@ import dev.repository.TransportRepo;
 import dev.repository.VersionRepo;
 
 /**
- * Code de démarrage de l'application.
- * Insertion de jeux de données.
+ * Code de démarrage de l'application. Insertion de jeux de données.
  */
 @Component
 public class StartupListener {
 
-    private String appVersion;
-    private VersionRepo versionRepo;
-    private PasswordEncoder passwordEncoder;
-    private CollegueRepo collegueRepo;
+	private String appVersion;
+	private VersionRepo versionRepo;
+	private PasswordEncoder passwordEncoder;
+	private CollegueRepo collegueRepo;
 	private TransportRepo transportRepo;
 	private NatureRepo natureRepo;
 	private LigneDeFraisRepo ligneDeFraisRepo;
@@ -47,40 +46,42 @@ public class StartupListener {
 			PasswordEncoder passwordEncoder, CollegueRepo collegueRepo, TransportRepo transportRepo,
 			NatureRepo natureRepo, LigneDeFraisRepo ligneDeFraisRepo, MissionRepo missionRepo) {
 
-        this.appVersion = appVersion;
-        this.versionRepo = versionRepo;
-        this.passwordEncoder = passwordEncoder;
+		this.appVersion = appVersion;
+		this.versionRepo = versionRepo;
+		this.passwordEncoder = passwordEncoder;
 
-        this.collegueRepo = collegueRepo;
+		this.collegueRepo = collegueRepo;
 		this.transportRepo = transportRepo;
 		this.natureRepo = natureRepo;
 		this.ligneDeFraisRepo = ligneDeFraisRepo;
 		this.missionRepo = missionRepo;
-    }
+	}
 
-    @EventListener(ContextRefreshedEvent.class)
-    public void onStart() {
-        this.versionRepo.save(new Version(appVersion));
+	@EventListener(ContextRefreshedEvent.class)
+	public void onStart() {
+		this.versionRepo.save(new Version(appVersion));
 
-        // Création de deux utilisateurs
+		// Création de deux utilisateurs
 
-        Collegue col1 = new Collegue();
-        col1.setNom("Admin");
-        col1.setPrenom("DEV");
-        col1.setEmail("admin@dev.fr");
-        col1.setMotDePasse(passwordEncoder.encode("superpass"));
-        col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR), new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
-        this.collegueRepo.save(col1);
+		Collegue col1 = new Collegue();
+		col1.setNom("Admin");
+		col1.setPrenom("DEV");
+		col1.setEmail("admin@dev.fr");
+		col1.setMotDePasse(passwordEncoder.encode("superpass"));
+		col1.setRoles(Arrays.asList(new RoleCollegue(col1, Role.ROLE_ADMINISTRATEUR),
+				new RoleCollegue(col1, Role.ROLE_UTILISATEUR)));
+		this.collegueRepo.save(col1);
 
-        Collegue col2 = new Collegue();
-        col2.setNom("User");
-        col2.setPrenom("DEV");
-        col2.setEmail("user@dev.fr");
-        col2.setMotDePasse(passwordEncoder.encode("superpass"));
-        col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
-        this.collegueRepo.save(col2);
+		Collegue col2 = new Collegue();
+		col2.setNom("User");
+		col2.setPrenom("DEV");
+		col2.setEmail("user@dev.fr");
+		col2.setMotDePasse(passwordEncoder.encode("superpass"));
+		col2.setRoles(Arrays.asList(new RoleCollegue(col2, Role.ROLE_UTILISATEUR)));
+		this.collegueRepo.save(col2);
 
 		Collegue col3 = new Collegue();
+
 		col3.setNom("Manager");
 		col3.setPrenom("DEV");
 		col3.setEmail("manager@dev.fr");
@@ -107,7 +108,7 @@ public class StartupListener {
 
 		Nature n1 = new Nature();
 
-		n1.setLibelle("Conseil".toUpperCase());
+		n1.setLibelle("Conseil");
 		n1.setEstFacture(true);
 		n1.setEstPrime(true);
 		n1.setTjm(800);
@@ -117,7 +118,7 @@ public class StartupListener {
 
 		Nature n2 = new Nature();
 
-		n2.setLibelle("Formation".toUpperCase());
+		n2.setLibelle("Formation");
 		n2.setEstFacture(true);
 		n2.setEstPrime(false);
 		n2.setTjm(1000);
@@ -126,7 +127,7 @@ public class StartupListener {
 
 		Nature n3 = new Nature();
 
-		n3.setLibelle("Expertise".toUpperCase());
+		n3.setLibelle("Expertise technique");
 		n3.setEstFacture(false);
 		n3.setEstPrime(false);
 		n3.setTjm(0);
@@ -149,10 +150,10 @@ public class StartupListener {
 		miss2.setDateDebut(LocalDate.of(2020, 3, 8));
 		miss2.setDateFin(LocalDate.of(2020, 3, 12));
 		miss2.setNature(n2);
-		miss2.setStatus(Status.VALIDEE);
+		miss2.setStatus(Status.INITIALE);
 		miss2.setTransport(tr3);
 		miss2.setVilleArrivee("Paris");
-		miss2.setVilleDepart("Lyon");
+		miss2.setVilleDepart("Lille");
 		this.missionRepo.save(miss2);
 
 		Mission miss3 = new Mission();
@@ -180,10 +181,16 @@ public class StartupListener {
 		
 		
 
-      n1.setDateFin(LocalDate.now().minusDays(1));
-                  this.natureRepo.save(n1);     
-                  n1.setTjm(2000);        
-      this.natureRepo.save(new Nature(n1.getLibelle(),n1.isEstFacture(),n1.isEstPrime(),n1.getTjm(),n1.getValeurPrime()));
+		n1.setDateFin(LocalDate.now().minusDays(1));
+		this.natureRepo.save(n1);
+		n1.setTjm(2000);
+		this.natureRepo.save(
+				new Nature(n1.getLibelle(), n1.isEstFacture(), n1.isEstPrime(), n1.getTjm(), n1.getValeurPrime()));
+
+v1-modifierMission-recuperation
+	}
+
 
     }
+
 }

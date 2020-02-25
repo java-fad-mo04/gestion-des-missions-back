@@ -1,3 +1,4 @@
+
 package dev.controller;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +39,11 @@ public class MissionController {
 	public List<MissionVM> listMission() {
 		return this.missionService.listMission();
 	}
+	
+	@GetMapping (path="/{idMission}")
+	public MissionVM recupMission(@PathVariable("idMission") Long idMission) throws Exception {
+		return this.missionService.recupMission(idMission);
+	};
 
 	@PostMapping()
 	public ResponseEntity<String> createMission(@RequestBody @Valid MissionVM missionIn) {
@@ -44,7 +51,7 @@ public class MissionController {
 	}
 
 	@PatchMapping
-	public ResponseEntity<String> patchReservation(@RequestBody @Valid MissionDTO rectif) throws Exception {
+	public ResponseEntity<String> patchMission(@RequestBody MissionVM rectif) throws Exception {
 		return this.missionService.modifierMission(rectif);
 
 	}
@@ -54,3 +61,4 @@ public class MissionController {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
 	}
 }
+
