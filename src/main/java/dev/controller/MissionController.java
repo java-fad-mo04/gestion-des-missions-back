@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.controller.vm.MissionVM;
-import dev.domain.MissionDTO;
 import dev.service.MissionService;
 
 @CrossOrigin
@@ -45,7 +44,7 @@ public class MissionController {
 		return this.missionService.recupMission(idMission);
 	};
 
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<String> createMission(@RequestBody @Valid MissionVM missionIn) {
 		return this.missionService.createMission(missionIn);
 	}

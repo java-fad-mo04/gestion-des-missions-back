@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.controller.vm.FraisVM;
-import dev.controller.vm.MissionVM;
-import dev.domain.MissionDTO;
-import dev.repository.LigneDeFraisRepo;
-import dev.repository.MissionRepo;
 import dev.service.FraisService;
 
 /**
@@ -35,11 +31,8 @@ import dev.service.FraisService;
 public class FraisController {
 
 	private FraisService fraisService;
-	private LigneDeFraisRepo ligneDeFraisRepo;
-	private MissionRepo missionRepo;
 	
 	public FraisController(FraisService fraisService) {
-		super();
 		this.fraisService = fraisService;
 	}
 	
@@ -48,7 +41,7 @@ public class FraisController {
 		return this.fraisService.listFrais();
 	}
 	
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<String> createFrais(@RequestBody @Valid FraisVM fraisIn) {
 		return this.fraisService.createFrais(fraisIn);
 	}
@@ -59,8 +52,8 @@ public class FraisController {
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<String>deleteFrais(@RequestBody @Valid FraisVM fraisIn){
-		return this.fraisService.supprimerFrais(fraisIn);
+	public ResponseEntity<String> deleteFrais(@RequestBody @Valid Long id) {
+		return this.fraisService.supprimerFrais(id);
 	}
 
 	@ExceptionHandler(value = { Exception.class })

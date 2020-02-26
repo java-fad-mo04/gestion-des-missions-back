@@ -14,7 +14,6 @@ import dev.domain.Collegue;
 import dev.domain.LigneDeFrais;
 import dev.domain.Mission;
 import dev.domain.Nature;
-import dev.domain.NatureFrais;
 import dev.domain.Role;
 import dev.domain.RoleCollegue;
 import dev.domain.Status;
@@ -136,10 +135,10 @@ public class StartupListener {
 
 		Mission miss1 = new Mission();
 		miss1.setCollegue(col1);
-		miss1.setDateDebut(LocalDate.of(2020, 3, 2));
-		miss1.setDateFin(LocalDate.of(2020, 3, 2));
+		miss1.setDateDebut(LocalDate.of(2020, 1, 2));
+		miss1.setDateFin(LocalDate.of(2020, 1, 4));
 		miss1.setNature(n1);
-		miss1.setStatus(Status.INITIALE);
+		miss1.setStatus(Status.VALIDEE);
 		miss1.setTransport(tr2);
 		miss1.setVilleArrivee("Paris");
 		miss1.setVilleDepart("Lille");
@@ -167,16 +166,18 @@ public class StartupListener {
 		miss3.setVilleDepart("Berlin");
 		this.missionRepo.save(miss3);
 		
-		LigneDeFrais frais1 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Hotel,200,miss1);
+		LigneDeFrais frais1 = new LigneDeFrais(LocalDate.parse("2020-02-24"), "Hotel", new BigDecimal("200"), miss1);
 		this.ligneDeFraisRepo.save(frais1);
 		
-		LigneDeFrais frais2 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.PetitDejeuner,15,miss1);
+		LigneDeFrais frais2 = new LigneDeFrais(LocalDate.parse("2020-02-24"), "PetitDejeuner", new BigDecimal("15"),
+				miss1);
 		this.ligneDeFraisRepo.save(frais2);
 		
-		LigneDeFrais frais3 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Transport,90,miss1);
+		LigneDeFrais frais3 = new LigneDeFrais(LocalDate.parse("2020-02-24"), "Transport", new BigDecimal("90"), miss1);
 		this.ligneDeFraisRepo.save(frais3);
 		
-		LigneDeFrais frais4 = new LigneDeFrais(LocalDate.parse("2020-02-24"),NatureFrais.Restaurant,30,miss1);
+		LigneDeFrais frais4 = new LigneDeFrais(LocalDate.parse("2020-02-24"), "Restaurant", new BigDecimal("30"),
+				miss1);
 		this.ligneDeFraisRepo.save(frais4);
 		
 		
@@ -186,8 +187,6 @@ public class StartupListener {
 		n1.setTjm(2000);
 		this.natureRepo.save(
 				new Nature(n1.getLibelle(), n1.isEstFacture(), n1.isEstPrime(), n1.getTjm(), n1.getValeurPrime()));
-
-
 	}
 
 
