@@ -7,8 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import dev.domain.LigneDeFrais;
-import dev.domain.Mission;
-import dev.domain.NatureFrais;
 
 /**
  * @author clementlittardi
@@ -17,17 +15,23 @@ import dev.domain.NatureFrais;
 public class FraisVM {
 	private long id;
 	private LocalDate date;
-	private NatureFrais nature;
-	private long montant;
-	private Mission mission;
+	private String libelle;
+	private BigDecimal montant;
+	private MissionVM mission;
 	
+	/**
+	 * Constructeur
+	 * 
+	 * @param ligneDeFrais
+	 *            ligne de frais
+	 */
 	public FraisVM(LigneDeFrais ligneDeFrais) {
 		super();
-		this.id=id;
-		this.date=date;
-		this.montant=montant;
-		this.nature=nature;
-		this.mission=mission;
+		this.id = ligneDeFrais.getId();
+		this.date = ligneDeFrais.getDate();
+		this.montant = ligneDeFrais.getMontant();
+		this.libelle = ligneDeFrais.getLibelle();
+		this.mission = new MissionVM(ligneDeFrais.getMission());
 	}
 	
 	public FraisVM() {
@@ -62,46 +66,48 @@ public class FraisVM {
 	}
 
 	/**
-	 * @return the nature
+	 * @return the libelle
 	 */
-	public NatureFrais getNature() {
-		return nature;
+	public String getLibelle() {
+		return libelle;
 	}
 
 	/**
-	 * @param nature the nature to set
+	 * @param libelle
+	 *            the libelle to set
 	 */
-	public void setNature(NatureFrais nature) {
-		this.nature = nature;
+	public void setLibelle(String libelle) {
+		this.libelle = libelle;
 	}
 
 	/**
 	 * @return the montant
 	 */
-	public long getMontant() {
+	public BigDecimal getMontant() {
 		return montant;
 	}
 
 	/**
 	 * @param montant the montant to set
 	 */
-	public void setMontant(long montant) {
+	public void setMontant(BigDecimal montant) {
 		this.montant = montant;
 	}
 
 	/**
 	 * @return the mission
 	 */
-	public Mission getMission() {
+	public MissionVM getMission() {
 		return mission;
 	}
 
 	/**
 	 * @param mission the mission to set
 	 */
-	public void setMission(Mission mission) {
+	public void setMission(MissionVM mission) {
 		this.mission = mission;
 	}
+
 	
 	
 }

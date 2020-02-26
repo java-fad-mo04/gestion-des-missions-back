@@ -8,6 +8,6 @@ package dev.domain;
  *
  */
 public enum NatureFrais {
-	Hotel, Restaurant, PetitDejeuner, Transport
+	HOTEL, RESTAURANT, PETIT_DEJEUNER, TRANSPORT
 
 }

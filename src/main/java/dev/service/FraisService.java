@@ -16,9 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import dev.controller.vm.FraisVM;
-import dev.controller.vm.MissionVM;
 import dev.domain.LigneDeFrais;
-import dev.domain.Mission;
 import dev.repository.LigneDeFraisRepo;
 import dev.repository.MissionRepo;
 
@@ -39,6 +37,7 @@ public class FraisService {
 		this.ligneDeFraisRepo = ligneDeFraisRepo;
 		this.missionRepo = missionRepo;
 	}
+
 
 	public ResponseEntity<String> createFrais(FraisVM fraisIn) {
 		if (montantPositif(fraisIn.getMontant()) && verificationDate(fraisIn.getMission().getDateDebut(),
@@ -75,11 +74,11 @@ public class FraisService {
 			fraisModif.setMontant(fraisIn.getMontant());
 			
 			//Modifier la nature du frais
-			fraisModif.setNature(fraisIn.getNature());
+			fraisModif.setLibelle(fraisIn.getLibelle());
 			
 			//Modifier la mission
 			//fraisModif.setMission(fraisIn.getMission());
-			fraisModif.setMission(this.missionRepo.findById(fraisIn.getId())
+			fraisModif.setMission(this.missionRepo.findById(fraisIn.getMission().getId())
 					.orElseThrow(() -> new EntityExistsException("Mission avec cet id n'existe pas.")));
 			
 			ligneDeFraisRepo.save(fraisIn);
@@ -92,16 +91,16 @@ public class FraisService {
 		}
 	}
 	
-	public ResponseEntity<String> supprimerFrais (FraisVM fraisIn){
-		ligneDeFraisRepo.deleteById(fraisIn.getId());
-		ligneDeFraisRepo.save(fraisIn);
+	public ResponseEntity<String> supprimerFrais(Long id) {
+		ligneDeFraisRepo.deleteById(id);
+		// ligneDeFraisRepo.save(fraisIn);
 		return ResponseEntity.status(HttpStatus.OK).body("La ligne de frais a bien été supprimée");
 	}
 	
 
 	/** Règles métier */
-	public boolean montantPositif(long montant) {
-		return montant > 0;
+	public boolean montantPositif(BigDecimal bigDecimal) {
+		return bigDecimal.compareTo(BigDecimal.ZERO) > 0;
 	}
 
 	public boolean verificationDate(LocalDate dateDebut, LocalDate dateFin, LocalDate date) {
@@ -110,7 +109,7 @@ public class FraisService {
 
 	public boolean verificationUnique(List<LigneDeFrais> liste, FraisVM fraisIn) {
 		for (LigneDeFrais l : liste) {
-			if (l.getDate().isEqual(fraisIn.getDate()) && l.getNature().equals(fraisIn.getNature())) {
+			if (l.getDate().isEqual(fraisIn.getDate()) && l.getLibelle().equals(fraisIn.getLibelle())) {
 				return false;
 			}
 		}
