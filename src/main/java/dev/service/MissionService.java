@@ -86,11 +86,14 @@ public class MissionService {
 					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
 		}
 
-		//collegue has at least one mission in the db - check if the new overlaps with existing and a holiday
+		// collegue has at least one mission in the db - check if the new
+		// overlaps with existing
 		if (!this.missionRepo.findByCollegueId(missionIn.getCollegue().getId()).isEmpty()) {
 			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegue().getId());
 
+
 			for (Mission m : missions) {
+				System.out.println(missionIn.getDateDebut().isAfter(m.getDateFin()));
 				if (!missionIn.getDateDebut().isAfter(m.getDateFin())
 						&& !missionIn.getDateFin().isBefore(m.getDateDebut())) {
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -98,6 +101,7 @@ public class MissionService {
 				}
 			}
 		}
+
 		Mission mission = new Mission();
 		mission.setDateDebut(missionIn.getDateDebut());
 		mission.setDateFin(missionIn.getDateFin());
