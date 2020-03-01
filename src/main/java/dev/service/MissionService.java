@@ -11,12 +11,10 @@ import javax.persistence.EntityExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import dev.controller.vm.CollegueVM;
 import dev.controller.vm.MissionVM;
 import dev.domain.Mission;
-import dev.domain.MissionDTO;
-import dev.domain.RoleCollegue;
 import dev.domain.Status;
 import dev.repository.CollegueRepo;
 import dev.repository.LigneDeFraisRepo;
@@ -26,6 +24,7 @@ import dev.repository.TransportRepo;
 import dev.utils.DateChecker;
 
 @Service
+@Transactional
 public class MissionService {
 	private MissionRepo missionRepo;
 	private TransportRepo transportRepo;
@@ -57,7 +56,9 @@ public class MissionService {
 	 * @return ResponseEntity<String>
 	 */
 	public ResponseEntity<String> createMission(MissionVM missionIn) {
-
+		if (missionIn.getCollegue().getId() == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collègue n'existe pas");
+		}
 		if (!this.missionRepo
 				.findByCollegueIdDateDebutDateFin(missionIn.getCollegue().getId(), missionIn.getDateDebut(),
 						missionIn.getDateFin())
@@ -87,11 +88,14 @@ public class MissionService {
 					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
 		}
 
-		//collegue has at least one mission in the db - check if the new overlaps with existing and a holiday
+		// collegue has at least one mission in the db - check if the new
+		// overlaps with existing
 		if (!this.missionRepo.findByCollegueId(missionIn.getCollegue().getId()).isEmpty()) {
 			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegue().getId());
 
+
 			for (Mission m : missions) {
+				System.out.println(missionIn.getDateDebut().isAfter(m.getDateFin()));
 				if (!missionIn.getDateDebut().isAfter(m.getDateFin())
 						&& !missionIn.getDateFin().isBefore(m.getDateDebut())) {
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -99,6 +103,7 @@ public class MissionService {
 				}
 			}
 		}
+
 		Mission mission = new Mission();
 		mission.setDateDebut(missionIn.getDateDebut());
 		mission.setDateFin(missionIn.getDateFin());
@@ -123,29 +128,20 @@ public class MissionService {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
-	public MissionVM recupMission(Long id) throws Exception {
-		MissionVM md = new MissionVM();
-		Mission m = missionRepo.findById(id).orElseThrow(() -> new Exception("La mission n'existe pas"));
-		CollegueVM coll = new CollegueVM();
-		coll.setId(m.getCollegue().getId());
-		coll.setEmail(m.getCollegue().getEmail());
-		coll.setNom(m.getCollegue().getNom());
-		coll.setPrenom(m.getCollegue().getPrenom());
-		for (RoleCollegue role : m.getCollegue().getRoles()) {
-			coll.getRoles().add(role.getRole());
-		}
-		
-		md.setId(m.getId());
-		md.setDateDebut(m.getDateDebut());
-		md.setDateFin(m.getDateFin());
-		md.setCollegue(coll);
-		md.setNature(m.getNature());
-		md.setStatus(m.getStatus());
-		md.setTransport(m.getTransport());
-		md.setVilleArrivee(m.getVilleArrivee());
-		md.setVilleDepart(m.getVilleDepart());
-		return md;
+	/**
+	 * @param id identification number
+	 * @return MissionVM
+	 */
+	public MissionVM findMissionById(Long id) {
+		return this.missionRepo.findById(id).map(MissionVM::new).orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
 	}
+
+	public void deleteMissionById(Long id) {
+		this.ligneDeFraisRepo.deleteByMissionId(id);
+		this.missionRepo.deleteById(id);
+	}
+
+
 	/**
 	 * @param mission
 	 * @return

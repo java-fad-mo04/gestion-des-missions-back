@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.controller.vm.MissionVM;
-import dev.domain.MissionDTO;
 import dev.service.MissionService;
 
 @CrossOrigin
@@ -40,12 +40,17 @@ public class MissionController {
 		return this.missionService.listMission();
 	}
 	
-	@GetMapping (path="/{idMission}")
-	public MissionVM recupMission(@PathVariable("idMission") Long idMission) throws Exception {
-		return this.missionService.recupMission(idMission);
+	@GetMapping(path = "/{id}")
+	public MissionVM findMissionById(@PathVariable("id") Long id) {
+		return this.missionService.findMissionById(id);
 	};
 
-	@PostMapping()
+	@DeleteMapping(path = "/{id}")
+	public void deleteMissionById(@PathVariable("id") Long id) {
+		this.missionService.deleteMissionById(id);
+	};
+
+	@PostMapping
 	public ResponseEntity<String> createMission(@RequestBody @Valid MissionVM missionIn) {
 		return this.missionService.createMission(missionIn);
 	}

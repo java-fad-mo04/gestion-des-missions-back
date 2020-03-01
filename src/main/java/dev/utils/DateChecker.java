@@ -1,6 +1,7 @@
 package dev.utils;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -26,18 +27,28 @@ public class DateChecker {
 	private static final Logger LOG = LoggerFactory.getLogger(DateChecker.class);
 
 	/**
-	 * @param dateDebut start date of the mission
-	 * @param dateFin end date of the mission
+	 * Check if the start/end date of the mission is on the weekend or holiday
+	 * 
+	 * @param dateDebut
+	 *            start date of the mission
+	 * @param dateFin
+	 *            end date of the mission
 	 * @return true/false
 	 */
 	public static boolean isHoliday(LocalDate dateDebut, LocalDate dateFin) {
 		List<LocalDate> holidays = getHolidays();
+		boolean notWorkday = false;
 		for (LocalDate l : holidays) {
 			if (dateDebut.isEqual(l) || dateFin.isEqual(l)) {
-				return true;
+				notWorkday = true;
+			}
+			if (dateDebut.getDayOfWeek().equals(DayOfWeek.SATURDAY) || dateDebut.getDayOfWeek().equals(DayOfWeek.SUNDAY)
+					|| dateFin.getDayOfWeek().equals(DayOfWeek.SATURDAY)
+					|| dateFin.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+				notWorkday = true;
 			}
 		}
-		return false;
+		return notWorkday;
 	}
 
 	/**

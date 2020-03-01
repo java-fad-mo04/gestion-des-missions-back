@@ -26,10 +26,10 @@ public class LigneDeFrais {
 	private LocalDate date;
 
 	/** label */
-	private NatureFrais nature;
+	private String libelle;
 
 	/** total sum	 */
-	private long montant;
+	private BigDecimal montant;
 
 	/** mission	 */
 	@OneToOne
@@ -43,32 +43,21 @@ public class LigneDeFrais {
 	}
 
 	/**
+	 * Constructor with params
+	 * 
 	 * @param date date
 	 * @param libelle label
-	 * @param montant total sum
+	 * @param montant sum
 	 * @param mission mission
 	 */
-	public LigneDeFrais(LocalDate date, NatureFrais nature, long montant, Mission mission) {
+	public LigneDeFrais(LocalDate date, String libelle, BigDecimal montant, Mission mission) {
 		super();
 		this.date = date;
-		this.nature = nature;
+		this.libelle = libelle;
 		this.montant = montant;
 		this.mission = mission;
 	}
 
-	/**
-	 * @return the id identification
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	/**
 	 * @return the date date
@@ -84,32 +73,50 @@ public class LigneDeFrais {
 		this.date = date;
 	}
 
+
 	/**
-	 * @return the nature 
+	 * @return the libelle
 	 */
-	public NatureFrais getNature() {
-		return nature;
+	public String getLibelle() {
+		return libelle;
 	}
 
 	/**
-	 * @param libelle the label to set
+	 * @param libelle
+	 *            the libelle to set
 	 */
-	public void setNature(NatureFrais nature) {
-		this.nature = nature;
+	public void setLibelle(String libelle) {
+		this.libelle = libelle;
 	}
 
 	/**
-	 * @return the montant total sum
+	 * @return the montant
 	 */
-	public long getMontant() {
+	public BigDecimal getMontant() {
 		return montant;
 	}
 
 	/**
-	 * @param montant the total sum to set
+	 * @param montant
+	 *            the montant to set
 	 */
-	public void setMontant(long montant) {
+	public void setMontant(BigDecimal montant) {
 		this.montant = montant;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**

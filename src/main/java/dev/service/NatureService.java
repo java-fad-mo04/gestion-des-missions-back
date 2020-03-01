@@ -10,6 +10,7 @@ import javax.persistence.EntityExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dev.domain.Nature;
 import dev.repository.MissionRepo;
@@ -22,6 +23,7 @@ import dev.repository.NatureRepo;
 
 
 @Service
+@Transactional
 public class NatureService {
 
 	private NatureRepo natureRepository;

@@ -18,6 +18,12 @@ public class MissionVM {
 	private Status status;
 	private CollegueVM collegue;
 
+	/**
+	 * Cnstructor
+	 * 
+	 * @param mission
+	 *            missionVM
+	 */
 	public MissionVM(Mission mission) {
 		super();
 		this.id = mission.getId();
