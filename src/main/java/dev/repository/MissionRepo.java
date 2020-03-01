@@ -26,5 +26,8 @@ public interface MissionRepo extends JpaRepository<Mission, Long> {
 	@Query("SELECT m FROM Mission m WHERE m.collegue.id=:id AND m.dateDebut=:dateDebut AND m.dateFin=:dateFin")
 	List<Mission> findByCollegueIdDateDebutDateFin(@Param(value = "id") Long id,
 			@Param(value = "dateDebut") LocalDate dateDebut, @Param(value = "dateFin") LocalDate dateFin);
+	
+	
+	List<Mission> findByNatureId(Long id);
 
 }

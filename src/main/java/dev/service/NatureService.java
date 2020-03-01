@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import dev.domain.Nature;
+import dev.repository.MissionRepo;
 import dev.repository.NatureRepo;
 
 /** Service de l'entite nature
@@ -24,10 +25,12 @@ import dev.repository.NatureRepo;
 public class NatureService {
 
 	private NatureRepo natureRepository;
+	private MissionRepo missionRepository;
 
-	public NatureService(NatureRepo natureRepo) {
+	public NatureService(NatureRepo natureRepo,MissionRepo missionRepo) {
 
 		this.natureRepository = natureRepo;
+		this.missionRepository = missionRepo;
 	}
 	
 	/**Recuperation de la liste des natures
@@ -54,8 +57,10 @@ public class NatureService {
 	 * */
 
 	public ResponseEntity<String> ajoutNature(Nature nature) {
+		
+		System.out.println(nature.getDateFin());
 
-		if (this.natureRepository.existsByLibelle(nature.getLibelle().trim().toUpperCase())) {
+		if (this.natureRepository.existsByLibelleAndDateFin(nature.getLibelle().trim().toUpperCase(),nature.getDateFin())) {
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature deja existante");
 
@@ -70,7 +75,7 @@ public class NatureService {
 
 		
 
-		return ResponseEntity.status(HttpStatus.CREATED).body("Nature enregistré");
+		return ResponseEntity.status(HttpStatus.CREATED).body("Nature enregistrée");
 
 	}
 	/** Modification d'une nature , Sauvegarde l'ancienne avec une date j-1 a la modification
@@ -85,7 +90,7 @@ public class NatureService {
 		
 		
 		if(!recupNature.isPresent()){			
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature non trouvé");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature non trouvée");
 		}
 		
 		Nature modifNature = recupNature.get();
@@ -112,7 +117,25 @@ public class NatureService {
 		this.natureRepository.save(new Nature(nature.getLibelle(),nature.isEstFacture(),nature.isEstPrime(),nature.getTjm(),nature.getValeurPrime()));
 		
 		
-		return ResponseEntity.status(HttpStatus.OK).body("Nature modifié");
+		return ResponseEntity.status(HttpStatus.OK).body("Nature modifiée");
+		
+	}
+	/** Suppression d'une nature
+	 * Param Long idNature
+	 * 
+	 * return ResponseEntity<String>
+	 * */
+	
+	public ResponseEntity<String> deleteNature(Long idNature){
+		
+		
+		if(!missionRepository.findByNatureId(idNature).isEmpty()){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature non supprimée car utilisée");
+		}
+		
+		this.natureRepository.deleteById(idNature);
+		
+		return ResponseEntity.status(HttpStatus.OK).body("Nature supprimée");
 		
 	}
 	
