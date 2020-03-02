@@ -2,6 +2,7 @@
 package dev.service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -124,6 +125,16 @@ public class MissionService {
 	 */
 	public List<MissionVM> listMission() {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
+	}
+	
+	public List<MissionVM> listeMissionPrime(Long id,int date){
+		
+		
+		LocalDate dateDebut = LocalDate.of(date, Month.JANUARY, 1);
+		LocalDate dateFin = LocalDate.of(date, Month.DECEMBER, 31);
+		LocalDate dateNow = LocalDate.now();
+						
+		return this.missionRepo.findMissionPrime(id, dateDebut, dateFin,dateNow).stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
 
