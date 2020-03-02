@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,13 +42,7 @@ public class NatureController {
 	/**
 	 * Recuperation de la liste des natures les plus recentes
 	 * 
-	 * */
-	
-	
-	/**
-	 * Ajout d'une nature via la methode POST
-	 * */
-	
+	 */
 	@GetMapping
 	public List<Nature>listeLastNature(){
 		return this.natureServ.listeLastNature();
@@ -62,11 +57,12 @@ public class NatureController {
 		return this.natureServ.getById(id);
 	}
 
-	/**Ajout d'une nature via la methode POST
+	/**
+	 * Ajout d'une nature via la methode POST
 	 * 
 	 * Return ResponseEntity<String>
 	 */
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<String> ajoutNature(@RequestBody @Valid Nature nature) {
 
 		return natureServ.ajoutNature(nature);
@@ -84,19 +80,18 @@ public class NatureController {
 		return natureServ.modifierNature(nature);
 
 	}
-	
-	/**Supression d'un nature
+
+	/**
+	 * Supression d'un nature
 	 * 
-	
-	 * */
-	@DeleteMapping(path="/{id}")
+	 * 
+	 */
+	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<String> deleteNature(@PathVariable("id") Long idNature) {
 
 		return natureServ.deleteNature(idNature);
 
 	}
-	
-
 	@ExceptionHandler
 	public ResponseEntity<?> reponse(NatureException e) {
 
