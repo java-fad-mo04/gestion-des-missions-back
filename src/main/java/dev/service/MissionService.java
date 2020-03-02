@@ -136,6 +136,9 @@ public class MissionService {
 		return this.missionRepo.findById(id).map(MissionVM::new).orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
 	}
 
+	/**
+	 * @param id
+	 */
 	public void deleteMissionById(Long id) {
 		this.ligneDeFraisRepo.deleteByMissionId(id);
 		this.missionRepo.deleteById(id);
