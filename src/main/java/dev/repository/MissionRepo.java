@@ -31,5 +31,7 @@ public interface MissionRepo extends JpaRepository<Mission, Long> {
 	@Modifying
 	@Query("DELETE FROM Mission m WHERE m.id=:id")
 	void deleteById(@Param(value = "id") Long id);
+	
+	List<Mission> findByNatureId(Long natureId);
 }
 

@@ -26,5 +26,7 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 	@Query("SELECT n FROM Nature n WHERE n.dateFin = null")
 	List<Nature> listeLastNature() ;
 	
+	
+	
 }
 
