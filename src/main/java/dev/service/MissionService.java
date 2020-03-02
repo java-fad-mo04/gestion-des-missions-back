@@ -50,9 +50,8 @@ public class MissionService {
 		this.ligneDeFraisRepo = ligneDeFraisRepo;
 	}
 
-	/**
-	 * @param missionIn
-	 *            mission form input by user
+	/** Create mission
+	 * @param missionIn  mission form input by user
 	 * @return ResponseEntity<String>
 	 */
 	public ResponseEntity<String> createMission(MissionVM missionIn) {
@@ -88,8 +87,7 @@ public class MissionService {
 					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
 		}
 
-		// collegue has at least one mission in the db - check if the new
-		// overlaps with existing
+		// collegue has at least one mission in the db - check if the new mission overlaps with existing
 		if (!this.missionRepo.findByCollegueId(missionIn.getCollegue().getId()).isEmpty()) {
 			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegue().getId());
 
@@ -136,9 +134,10 @@ public class MissionService {
 		return this.missionRepo.findById(id).map(MissionVM::new).orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
 	}
 
-	public void deleteMissionById(Long id) {
+	public ResponseEntity<String> deleteMissionById(Long id) {
 		this.ligneDeFraisRepo.deleteByMissionId(id);
 		this.missionRepo.deleteById(id);
+		return ResponseEntity.status(HttpStatus.OK).body("La mission a été supprimée");
 	}
 
 
@@ -181,9 +180,6 @@ public class MissionService {
 			throw new Exception("La date de début doit être antérieure à la date de fin");
 		}
 
-		if (mission.getDateDebut().equals(mission.getDateFin())) {
-			throw new Exception("La date de début doit être différente de la date de fin");
-		}
 		if (DateChecker.isHoliday(mission.getDateDebut(), mission.getDateFin())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Une mission ne peut pas commencer ou finir un jour férié");
