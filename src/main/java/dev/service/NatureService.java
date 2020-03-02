@@ -134,6 +134,7 @@ public class NatureService {
 		if (!this.missionRepository.findByNatureId(idNature).isEmpty()) {
 
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature non supprimée car utilisée");
+			
 		}
 		
 		this.natureRepository.deleteById(idNature);

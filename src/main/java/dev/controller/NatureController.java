@@ -89,7 +89,6 @@ public class NatureController {
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<String> deleteNature(@PathVariable("id") @Valid Long idNature) {
 
-
 		return this.natureServ.deleteNature(idNature);
 
 	}
