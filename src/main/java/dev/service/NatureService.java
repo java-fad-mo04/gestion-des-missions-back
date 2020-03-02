@@ -131,7 +131,8 @@ public class NatureService {
 	public ResponseEntity<String> deleteNature(Long idNature){
 		
 		
-		if(!this.missionRepository.findByNatureId(idNature).isEmpty()){
+		if (!this.missionRepository.findByNatureId(idNature).isEmpty()) {
+
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nature non supprimée car utilisée");
 		}
 		
