@@ -60,7 +60,6 @@ public class NatureService {
 
 	public ResponseEntity<String> ajoutNature(Nature nature) {
 		
-		System.out.println(nature.getDateFin());
 
 		if (this.natureRepository.existsByLibelleAndDateFin(nature.getLibelle().trim().toUpperCase(),nature.getDateFin())) {
 
