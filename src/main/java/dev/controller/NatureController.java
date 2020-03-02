@@ -91,8 +91,7 @@ public class NatureController {
 	}
 	
 	/**Supression d'un nature
-	 * 
-	
+	 * 	
 	 * */
 	@DeleteMapping(path="/{id}")
 	public ResponseEntity<String> deleteNature(@PathVariable("id") Long idNature) {
