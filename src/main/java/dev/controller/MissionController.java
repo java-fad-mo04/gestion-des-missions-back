@@ -53,8 +53,8 @@ public class MissionController {
 	}
 
 	@DeleteMapping(path = "/{id}")
-	public void deleteMissionById(@PathVariable("id") Long id) {
-		this.missionService.deleteMissionById(id);
+	public ResponseEntity<String> deleteMissionById(@PathVariable("id") Long id) {
+		return this.missionService.deleteMissionById(id);
 	};
 
 	@PostMapping

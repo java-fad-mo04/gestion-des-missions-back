@@ -31,9 +31,6 @@ public class Collegue {
     /** password of the colleague */
     private String motDePasse;
 
-	/** identification number if it is a manager */
-	private Long idManager;
-
     @OneToMany(mappedBy = "collegue", cascade = CascadeType.PERSIST)
     private List<RoleCollegue> roles;
 
