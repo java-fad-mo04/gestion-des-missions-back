@@ -126,6 +126,7 @@ public class MissionService {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
+
 	/**
 	 * @param id identification number
 	 * @return MissionVM
@@ -150,6 +151,10 @@ public class MissionService {
 
 		// Récupérer la mission à modifier dans la liste.
 		Optional<Mission> missionDb = missionRepo.findById(mission.getId());
+
+		if (!missionDb.get().getStatus().equals(Status.INITIALE)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mission ne peut pas être modifié");
+		}
 
 		// Créer les modifications de paramètres.
 		if (!missionDb.isPresent()) {
@@ -215,10 +220,6 @@ public class MissionService {
 		// Modifier le type de transport.
 		missModif.setTransport(this.transportRepo.findById(mission.getTransport().getId())
 				.orElseThrow(() -> new EntityExistsException("Aucun transport n'existe pour cet id")));
-
-
-		// Modifier le Statut.
-		missModif.setStatus(Status.INITIALE);
 
 		// missModif.setFicheDeFrais(mission.getFicheDeFrais());
 
