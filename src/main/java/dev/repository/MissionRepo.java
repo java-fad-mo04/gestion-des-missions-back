@@ -1,4 +1,3 @@
-
 package dev.repository;
 
 import java.time.LocalDate;
@@ -11,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import dev.domain.Mission;
+import dev.domain.Nature;
 
 /**
  * Repository for the Mission
@@ -32,4 +32,10 @@ public interface MissionRepo extends JpaRepository<Mission, Long> {
 	@Modifying
 	@Query("DELETE FROM Mission m WHERE m.id=:id")
 	void deleteById(@Param(value = "id") Long id);
+
+
+	@Query("SELECT m FROM Mission m WHERE m.nature.id=:id")
+	List<Mission> findByNatureId(@Param(value = "id") Long idNature);
+
 }
+

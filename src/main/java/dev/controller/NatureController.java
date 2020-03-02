@@ -4,12 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -44,13 +42,7 @@ public class NatureController {
 	/**
 	 * Recuperation de la liste des natures les plus recentes
 	 * 
-	 * */
-	
-	
-	/**
-	 * Ajout d'une nature via la methode POST
-	 * */
-	
+	 */
 	@GetMapping
 	public List<Nature>listeLastNature(){
 		return this.natureServ.listeLastNature();
@@ -65,15 +57,15 @@ public class NatureController {
 		return this.natureServ.getById(id);
 	}
 
-	/**Ajout d'une nature via la methode POST
->>>>>>> 3bcda3d5757403fea8832be262ea20db73fde107
+	/**
+	 * Ajout d'une nature via la methode POST
 	 * 
 	 * Return ResponseEntity<String>
 	 */
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<String> ajoutNature(@RequestBody @Valid Nature nature) {
 
-		return natureServ.ajoutNature(nature);
+		return this.natureServ.ajoutNature(nature);
 
 	}
 
@@ -85,7 +77,19 @@ public class NatureController {
 	@PatchMapping()
 	public ResponseEntity<String> modifierNature(@RequestBody @Valid Nature nature) {
 
-		return natureServ.modifierNature(nature);
+		return this.natureServ.modifierNature(nature);
+
+	}
+
+	/**
+	 * Supression d'un nature
+	 * 
+	 * 
+	 */
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<String> deleteNature(@PathVariable("id") @Valid Long idNature) {
+
+		return this.natureServ.deleteNature(idNature);
 
 	}
 

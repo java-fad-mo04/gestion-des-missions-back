@@ -180,15 +180,9 @@ public class StartupListener {
 				miss1);
 		this.ligneDeFraisRepo.save(frais4);
 		
-		
-
-		n1.setDateFin(LocalDate.now().minusDays(1));
-		this.natureRepo.save(n1);
-		n1.setTjm(2000);
-		this.natureRepo.save(
-				new Nature(n1.getLibelle(), n1.isEstFacture(), n1.isEstPrime(), n1.getTjm(), n1.getValeurPrime()));
 	}
 
 
 }
+
 
