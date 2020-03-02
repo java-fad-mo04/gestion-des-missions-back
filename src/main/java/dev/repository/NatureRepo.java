@@ -28,9 +28,11 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 	@Query("SELECT n FROM Nature n WHERE n.dateFin = null")
 	List<Nature> listeLastNature() ;
 	
+
 	@Override
 	@Modifying
 	@Query("DELETE FROM Nature n WHERE n.id=:id")
 	void deleteById(@Param(value = "id") Long id);
+
 }
 
