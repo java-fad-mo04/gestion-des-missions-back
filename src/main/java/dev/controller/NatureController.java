@@ -74,7 +74,7 @@ public class NatureController {
 	@PostMapping()
 	public ResponseEntity<String> ajoutNature(@RequestBody @Valid Nature nature) {
 
-		return natureServ.ajoutNature(nature);
+		return this.natureServ.ajoutNature(nature);
 
 	}
 
@@ -86,7 +86,7 @@ public class NatureController {
 	@PatchMapping()
 	public ResponseEntity<String> modifierNature(@RequestBody @Valid Nature nature) {
 
-		return natureServ.modifierNature(nature);
+		return this.natureServ.modifierNature(nature);
 
 	}
 	
@@ -97,7 +97,7 @@ public class NatureController {
 	@DeleteMapping(path="/{id}")
 	public ResponseEntity<String> deleteNature(@PathVariable("id") Long idNature) {
 
-		return natureServ.deleteNature(idNature);
+		return this.natureServ.deleteNature(idNature);
 
 	}
 	
