@@ -1,5 +1,6 @@
 package dev.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,8 @@ public interface NatureRepo extends JpaRepository<Nature, Long> {
 	boolean existsByLibelle(String libelle);
 
 	Optional<Nature> findByLibelle(String libelle);
+	
+	boolean existsByLibelleAndDateFin(String libelle,LocalDate date);
 	
 	@Query("SELECT n FROM Nature n WHERE n.dateFin = null")
 	List<Nature> listeLastNature() ;
