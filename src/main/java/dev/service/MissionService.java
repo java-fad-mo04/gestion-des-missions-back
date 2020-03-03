@@ -133,8 +133,9 @@ public class MissionService {
 	 */
 	public List<EventVM> listEvents() {
 		return this.missionRepo.findAll().stream().map(EventVM::new).collect(Collectors.toList());
-
+	}
 	
+
 	public List<MissionVM> listeMissionPrime(Long id,int date){
 		
 		LocalDate dateDebut = LocalDate.of(date, Month.JANUARY, 1);
