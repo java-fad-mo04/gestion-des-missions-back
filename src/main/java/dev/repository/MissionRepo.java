@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import dev.domain.Mission;
-import dev.domain.Nature;
 
 /**
  * Repository for the Mission

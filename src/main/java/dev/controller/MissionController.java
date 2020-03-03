@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.controller.vm.EventVM;
 import dev.controller.vm.MissionVM;
 import dev.service.MissionService;
 
@@ -40,6 +41,11 @@ public class MissionController {
 		return this.missionService.listMission();
 	}
 	
+	@GetMapping(path = "events")
+	public List<EventVM> listEvents() {
+		return this.missionService.listEvents();
+	}
+
 	@GetMapping(path = "/{id}")
 	public MissionVM findMissionById(@PathVariable("id") Long id) {
 		return this.missionService.findMissionById(id);

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.controller.vm.EventVM;
 import dev.controller.vm.MissionVM;
 import dev.domain.Mission;
 import dev.domain.Status;
@@ -126,13 +127,20 @@ public class MissionService {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
+	/**
+	 * @return list of events from Mission table
+	 */
+	public List<EventVM> listEvents() {
+		return this.missionRepo.findAll().stream().map(EventVM::new).collect(Collectors.toList());
+	}
 
 	/**
 	 * @param id identification number
 	 * @return MissionVM
 	 */
 	public MissionVM findMissionById(Long id) {
-		return this.missionRepo.findById(id).map(MissionVM::new).orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
+		return this.missionRepo.findById(id).map(MissionVM::new)
+				.orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
 	}
 
 
