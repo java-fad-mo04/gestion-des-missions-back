@@ -166,6 +166,17 @@ public class StartupListener {
 		miss3.setVilleDepart("Berlin");
 		this.missionRepo.save(miss3);
 		
+		Mission miss4 = new Mission();
+		miss4.setCollegue(col2);
+		miss4.setDateDebut(LocalDate.of(2020, 5, 1));
+		miss4.setDateFin(LocalDate.of(2020, 5, 15));
+		miss4.setNature(n2);
+		miss4.setStatus(Status.EN_ATTENTE_VALIDATION);
+		miss4.setTransport(tr3);
+		miss4.setVilleArrivee("Paris");
+		miss4.setVilleDepart("Berlin");
+		this.missionRepo.save(miss4);
+
 		LigneDeFrais frais1 = new LigneDeFrais(LocalDate.parse("2020-02-24"), "Hotel", new BigDecimal("200"), miss1);
 		this.ligneDeFraisRepo.save(frais1);
 		

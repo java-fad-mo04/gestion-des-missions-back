@@ -2,6 +2,7 @@
 package dev.service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,18 +52,18 @@ public class MissionService {
 		this.ligneDeFraisRepo = ligneDeFraisRepo;
 	}
 
-	/** Create mission
-	 * @param missionIn  mission form input by user
+	/**
+	 * Create mission
+	 * 
+	 * @param missionIn mission form input by user
 	 * @return ResponseEntity<String>
 	 */
 	public ResponseEntity<String> createMission(MissionVM missionIn) {
 		if (missionIn.getCollegue().getId() == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Collègue n'existe pas");
 		}
-		if (!this.missionRepo
-				.findByCollegueIdDateDebutDateFin(missionIn.getCollegue().getId(), missionIn.getDateDebut(),
-						missionIn.getDateFin())
-				.isEmpty()) {
+		if (!this.missionRepo.findByCollegueIdDateDebutDateFin(missionIn.getCollegue().getId(),
+				missionIn.getDateDebut(), missionIn.getDateFin()).isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Une mission existe déjà pour ce collègue à ces dates");
 		}
@@ -76,7 +77,7 @@ public class MissionService {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Une mission ne peut pas commencer ou finir à la date d'aujourd'hui");
 		}
-		
+
 		if (DateChecker.isHoliday(missionIn.getDateDebut(), missionIn.getDateFin())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body("Une mission ne peut pas commencer ou finir un jour férié");
@@ -88,10 +89,10 @@ public class MissionService {
 					.body("Le transport par avion doit être réservé au moins 7 jours à l'avance");
 		}
 
-		// collegue has at least one mission in the db - check if the new mission overlaps with existing
+		// collegue has at least one mission in the db - check if the new mission
+		// overlaps with existing
 		if (!this.missionRepo.findByCollegueId(missionIn.getCollegue().getId()).isEmpty()) {
 			List<Mission> missions = this.missionRepo.findByCollegueId(missionIn.getCollegue().getId());
-
 
 			for (Mission m : missions) {
 				System.out.println(missionIn.getDateDebut().isAfter(m.getDateFin()));
@@ -117,8 +118,7 @@ public class MissionService {
 		mission.setVilleArrivee(missionIn.getVilleArrivee());
 		this.missionRepo.save(mission);
 		return ResponseEntity.status(HttpStatus.CREATED).body("La mission a bien été enregistrée");
-		}
-
+	}
 
 	/**
 	 * @return list of missions from database
@@ -127,11 +127,21 @@ public class MissionService {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
+
 	/**
 	 * @return list of events from Mission table
 	 */
 	public List<EventVM> listEvents() {
 		return this.missionRepo.findAll().stream().map(EventVM::new).collect(Collectors.toList());
+
+	
+	public List<MissionVM> listeMissionPrime(Long id,int date){
+		
+		LocalDate dateDebut = LocalDate.of(date, Month.JANUARY, 1);
+		LocalDate dateFin = LocalDate.of(date, Month.DECEMBER, 31);
+		LocalDate dateNow = LocalDate.now();
+						
+		return this.missionRepo.findMissionPrime(id, dateDebut, dateFin,dateNow).stream().map(MissionVM::new).collect(Collectors.toList());
 	}
 
 	/**
@@ -143,16 +153,14 @@ public class MissionService {
 				.orElseThrow(() -> new EntityExistsException("La mission avec cet id n'existe pas"));
 	}
 
-
 	/**
 	 * @param id
 	 */
-	public ResponseEntity<String> deleteMissionById(Long id) {	
+	public ResponseEntity<String> deleteMissionById(Long id) {
 		this.ligneDeFraisRepo.deleteByMissionId(id);
 		this.missionRepo.deleteById(id);
 		return ResponseEntity.status(HttpStatus.OK).body("La mission a été supprimée");
 	}
-
 
 	/**
 	 * @param mission
@@ -219,7 +227,8 @@ public class MissionService {
 		}
 
 		// Modifier le collègue.
-		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegue().getId()).orElseThrow(()->new EntityExistsException("Ce collègue n'existe pas")));
+		missModif.setCollegue(this.collegueRepo.findById(mission.getCollegue().getId())
+				.orElseThrow(() -> new EntityExistsException("Ce collègue n'existe pas")));
 
 		// Modifier les villes
 		missModif.setVilleDepart(mission.getVilleDepart());
@@ -234,8 +243,18 @@ public class MissionService {
 				.orElseThrow(() -> new EntityExistsException("Aucun transport n'existe pour cet id")));
 
 		// missModif.setFicheDeFrais(mission.getFicheDeFrais());
+		
+		// CHANGER LE STATUT: validation.
+		if (mission.getStatus().equals(Status.VALIDEE)) {
+			missModif.setStatus(Status.VALIDEE);
+		}
+		// CHANGER LE STATUT: rejet.
+		if (mission.getStatus().equals(Status.REJETEE)) {
+			missModif.setStatus(Status.REJETEE);
+		}
 
 		this.missionRepo.save(missModif);
 		return ResponseEntity.status(HttpStatus.OK).body("La mission a bien été modifiée");
 	}
+	
 }

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import dev.domain.Mission;
+import dev.domain.Nature;
 
 /**
  * Repository for the Mission
@@ -32,9 +33,11 @@ public interface MissionRepo extends JpaRepository<Mission, Long> {
 	@Query("DELETE FROM Mission m WHERE m.id=:id")
 	void deleteById(@Param(value = "id") Long id);
 
-
 	@Query("SELECT m FROM Mission m WHERE m.nature.id=:id")
 	List<Mission> findByNatureId(@Param(value = "id") Long idNature);
+	
+	
+	@Query("SELECT m FROM Mission m WHERE m.collegue.id=:id AND m.dateFin<=:dateFin AND m.dateFin>=:dateDebut AND m.dateFin<:dateNow AND m.nature.estPrime=true")
+	List<Mission> findMissionPrime(@Param(value = "id") Long id,@Param(value = "dateDebut") LocalDate dateDebutAnnee,@Param(value = "dateFin")LocalDate dateFinAnnee,@Param(value = "dateNow")LocalDate dateNow);
 
 }
-

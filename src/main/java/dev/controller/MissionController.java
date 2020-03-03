@@ -50,6 +50,13 @@ public class MissionController {
 	public MissionVM findMissionById(@PathVariable("id") Long id) {
 		return this.missionService.findMissionById(id);
 	};
+	
+	@GetMapping(path = "/{id}/{date}")
+	public List<MissionVM> listMissionPrime(@PathVariable("id")Long id,@PathVariable("date")int date){
+		
+		return this.missionService.listeMissionPrime(id, date); 
+		
+	}
 
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<String> deleteMissionById(@PathVariable("id") Long id) {
@@ -66,6 +73,7 @@ public class MissionController {
 		return this.missionService.modifierMission(rectif);
 
 	}
+	
 
 	@ExceptionHandler(value = { Exception.class })
 	public ResponseEntity<String> erreurdate(Exception exception) {
