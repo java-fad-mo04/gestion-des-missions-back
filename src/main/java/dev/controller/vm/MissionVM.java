@@ -19,7 +19,7 @@ public class MissionVM {
 	private CollegueVM collegue;
 
 	/**
-	 * Cnstructor
+	 * Constructor
 	 * 
 	 * @param mission
 	 *            missionVM

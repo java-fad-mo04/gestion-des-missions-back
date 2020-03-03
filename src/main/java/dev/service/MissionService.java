@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.controller.vm.EventVM;
 import dev.controller.vm.MissionVM;
 import dev.domain.Mission;
 import dev.domain.Status;
@@ -125,9 +126,17 @@ public class MissionService {
 	public List<MissionVM> listMission() {
 		return this.missionRepo.findAll().stream().map(MissionVM::new).collect(Collectors.toList());
 	}
+
+
+	/**
+	 * @return list of events from Mission table
+	 */
+	public List<EventVM> listEvents() {
+		return this.missionRepo.findAll().stream().map(EventVM::new).collect(Collectors.toList());
+	}
 	
+
 	public List<MissionVM> listeMissionPrime(Long id,int date){
-		
 		
 		LocalDate dateDebut = LocalDate.of(date, Month.JANUARY, 1);
 		LocalDate dateFin = LocalDate.of(date, Month.DECEMBER, 31);
