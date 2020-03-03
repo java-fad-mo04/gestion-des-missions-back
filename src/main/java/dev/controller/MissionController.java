@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.controller.vm.EventVM;
 import dev.controller.vm.MissionVM;
 import dev.service.MissionService;
 
@@ -50,6 +51,11 @@ public class MissionController {
 		
 		return this.missionService.listeMissionPrime(id, date); 
 		
+	}
+
+	@GetMapping(path = "events")
+	public List<EventVM> listEvents() {
+		return this.missionService.listEvents();
 	}
 
 	@DeleteMapping(path = "/{id}")
